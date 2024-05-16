@@ -16,17 +16,11 @@ const WixCalendar = () => {
   const getDate = (count: number) => {
     const date = new Date(INITIAL_DATE);
     const newDate = date.setDate(date.getDate() + count);
-
-    const tmp = CalendarUtils.getCalendarDateString(newDate);
-    console.log(tmp);
-
     return CalendarUtils.getCalendarDateString(newDate);
   };
 
   const onDayPress = useCallback((day: DateData) => {
-    console.log(day);
     setSelected(day.dateString);
-    increment();
   }, []);
 
   const marked = useMemo(() => {
@@ -43,13 +37,6 @@ const WixCalendar = () => {
       }
     };
   }, [selected]);
-
-  const [count, setCount] = useState(0);
-
-  const increment = useCallback(() => {
-    setCount(prevCount => prevCount + 1);
-    console.log(count)
-  }, []); // Dependencies are empty, so increment is memoized once
 
   const renderCalendarWithSelectableDate = () => {
     return (
@@ -334,7 +321,7 @@ const WixCalendar = () => {
           displayLoadingIndicator
           markingType={'period'}
           theme={{
-            calendarBackground: '#333248',
+            calendarBackground: '#000',
             textSectionTitleColor: 'white',
             textSectionTitleDisabledColor: 'gray',
             dayTextColor: 'red',
