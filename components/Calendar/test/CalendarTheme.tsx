@@ -4,7 +4,7 @@
  */
 
 import { Text as DefaultText, View as DefaultView } from 'react-native';
-import { Calendar as DefaultCalendar, CalendarList as DefaultCalendarList  } from 'react-native-calendars';
+import { Agenda as DefaultAgenda, Calendar as DefaultCalendar, CalendarList as DefaultCalendarList  } from 'react-native-calendars';
 import { CalendarProps } from 'react-native-calendars/src/calendar/index';
 import { ContextProp } from 'react-native-calendars/src/types'
 
@@ -37,4 +37,11 @@ export function Calendar(props: themedCalendarProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
   return <DefaultCalendar key={color} theme={{calendarBackground: color}} {...otherProps} />
+}
+
+export function Agenda(props: themedCalendarProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+
+  return <DefaultAgenda key={color} theme={{calendarBackground: color}} {...otherProps} />
 }
