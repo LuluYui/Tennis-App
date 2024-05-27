@@ -4,15 +4,16 @@ import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import { CalendarList } from 'react-native-calendars';
 import  CalendarListScreen from '@/components/Calendar/test/_calendarList'
+import firebase_init from '@/firebase/firebase_init';
+import { useState } from 'react';
 
-export default function TabTwoScreen() {
+export default function TabThreeScreen() {
+  const [data, setData] = useState(firebase_init());
+
   return (
     <View style={styles.container}>
-      {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
-      {/* <EditScreenInfo path="app/(tabs)/two.tsx" /> */}
-      <CalendarListScreen />
-
-
+      <Text>hello</Text>
+      
     </View>
   );
 }
