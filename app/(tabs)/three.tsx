@@ -5,10 +5,18 @@ import { Text, View } from '@/components/Themed';
 import { CalendarList } from 'react-native-calendars';
 import  CalendarListScreen from '@/components/Calendar/test/_calendarList'
 import firebase_init from '@/firebase/firebase_init';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { emu_firebase } from '@/firebase/emu_firebase';
+
 
 export default function TabThreeScreen() {
-  const [data, setData] = useState(firebase_init());
+  // Production Code
+  // const [data, setData] = useState(firebase_init());
+
+  // Test Code
+  useEffect(() => {
+      emu_firebase();
+  }, []);
 
   return (
     <View style={styles.container}>

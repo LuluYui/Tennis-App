@@ -35,3 +35,4 @@ yarn-error.*
 *.tsbuildinfo
 
 expo-env.d.ts
+.my-nav-app.code-workspace
