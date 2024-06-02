@@ -34,5 +34,11 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+# expo
 expo-env.d.ts
+
+# vscode
 .my-nav-app.code-workspace
+
+# firebase log
+*.log
