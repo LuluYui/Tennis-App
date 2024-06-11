@@ -8,19 +8,12 @@ import firebase_init from '@/firebase/firebase_init';
 import { useEffect, useState } from 'react';
 import { emu_firebase } from '@/firebase/emu_firebase';
 
+const image = require('@/assets/images/favicon.png');
 
 export default function TabThreeScreen() {
-  // Production Code
-  // const [data, setData] = useState(firebase_init());
-
-  // Test Code
-  // useEffect(() => {
-  //     emu_firebase();
-  // }, []);
 
   return (
     <View style={styles.container}>
-      <Text>hello</Text>
       
     </View>
   );
