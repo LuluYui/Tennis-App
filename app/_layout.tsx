@@ -52,7 +52,7 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <SessionProvider>
         <Stack>
-          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
         </Stack>
       </SessionProvider>

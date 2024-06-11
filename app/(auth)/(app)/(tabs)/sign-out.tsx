@@ -1,8 +1,8 @@
 import { Text, View } from 'react-native';
 
-import { useSession } from '../ctx';
+import { useSession } from '../../ctx';
 import { router } from 'expo-router';
-import { useStorageState } from '../useStorageState';
+import { useStorageState } from '../../useStorageState';
 
 export default function Index() {
   const { signOut } = useSession();
@@ -14,7 +14,6 @@ export default function Index() {
         onPress={() => {
           // The `app/(app)/_layout.tsx` will redirect to the sign-in screen.
           signOut();
-          console.log('yolo', session);
         }}>
         Sign Out
       </Text>

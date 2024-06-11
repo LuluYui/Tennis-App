@@ -22,13 +22,29 @@ export function emu_firebase() {
 };
 
   let app, auth, db;
-  app = initializeApp(firebaseConfig);
-  auth = initializeAuth(app, {
-    persistence: getReactNativePersistence(ReactNativeAsyncStorage)
-  });
-  db = getDatabase(app);
-        
-  if (__DEV__) {
+    if(!getApps().length) {
+      try {
+        app = initializeApp(firebaseConfig);
+        auth = initializeAuth(app, {
+          persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+        });
+        db = getDatabase(app);
+
+      } catch(error){
+        console.log("Error Initializing app: " + error);
+      }
+    } else {
+      console.log('App exists, getting app')
+      app = getApp();
+      auth = getAuth(app);
+      db = getDatabase(app);
+      // isSupported().then((yes) => {
+      //   console.log('getting the analytics', JSON.stringify(app, null, 4))
+      //   analytics = getAnalytics(app);
+      // })
+    }
+
+  if (false) {
     console.log('connecting database emulators')
     connectAuthEmulator(auth, 'http://127.0.0.1:9099')
     connectDatabaseEmulator(db, "127.0.0.1", 9000);
@@ -36,7 +52,7 @@ export function emu_firebase() {
   }
 
   // mock sign-in function  
-  let email = 'customer@ex.com'
+  let email = 'test@test.com'
   let password = '123456'
 
   // Set log level (this part is crucial to handle log messages correctly)
@@ -69,23 +85,23 @@ export function emu_firebase() {
 
   function test_setget() {
     console.log('testing setget')
-    set(ref(db, '/users/' + '1'), {
-      username: 'someone',
-      email: 'email@email.com',
-      profile_picture : 'http://sadf.jpg'
-    })
-    .then(() => {
-      console.log('success')
-      // Data saved successfully!
-    })
-    .catch((error) => {
-      console.log(error)
-      // The write failed...
-    });
+    // set(ref(db, '/users/' + '1'), {
+    //   username: 'someone',
+    //   email: 'email@email.com',
+    //   profile_picture : 'http://sadf.jpg'
+    // })
+    // .then(() => {
+    //   console.log('success')
+    //   // Data saved successfully!
+    // })
+    // .catch((error) => {
+    //   console.log(error)
+    //   // The write failed...
+    // });
 
-    get(child(ref(db), '/users/1/')).then((r) => {
-      console.log(r)
-    })
+    // get(child(ref(db), '/users/1/')).then((r) => {
+    //   console.log(r)
+    // })
     // console.log(JSON.stringify(db, null, 4));
   }
 

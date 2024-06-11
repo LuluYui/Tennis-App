@@ -24,8 +24,8 @@ export default function TabLayout() {
   return (
 
         <Stack>
-            <Stack.Screen name="(app)" />
-            <Stack.Screen name="sign-in" />
+            <Stack.Screen name="(app)" options={{ headerShown: false }} />
+            <Stack.Screen name="sign-in" options={{ headerShown: false }} />
         </Stack>
 
   );
