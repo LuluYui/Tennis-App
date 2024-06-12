@@ -67,7 +67,7 @@ export default StyleSheet.create<Style>({
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
-    marginTop: 32,
+    marginTop: 22,
     elevation: 5,
     shadowRadius: 8,
     shadowOpacity: 0.3,

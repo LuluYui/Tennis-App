@@ -11,41 +11,24 @@ import emailValidator from "@/components/Authentication/helpers/emailValidator";
 import passwordValidator from "@/components/Authentication/helpers/passwordValidator";
 import TextButton from '@/components/Authentication/components/text-button/textbutton';
 
-export default function SignIn() {
-  const { signIn } = useSession();
-
+export default function Registration() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [repassword, setRepassword] = React.useState('');
-
-  const emailTextInputProps = {
-          style: {
-            maxWidth: 768,
-          },
-        };
-
-  const redirectRegisterPage = () => {
-    router.push('/registration');
-  }
-
-  // useEffect(() => {
-  //   console.log(password + ' ' + username)
-  // });
+  console.log('re : ', repassword)
+  console.log('password : ', password)
 
   return (
 
     <View style={{ flex: 1 }} >
         <LoginScreen
           logoImageSource={require('@/assets/images/logo-example.png')}
-          onLoginPress={() => {
-            signIn();
-            router.replace('/')
-          }}
-          onSignupPress={redirectRegisterPage}
+          onLoginPress={() => {}}
+          onSignupPress={() => {}}
           onEmailChange={setEmail}
-          loginButtonText={'Login'}
+          loginButtonText={'Register'}
+          disableSignup
           disableDivider
-          disableRepassword
           disableSocialButtons
           emailTextInputProps={{
             style: {
@@ -60,7 +43,6 @@ export default function SignIn() {
           loginButtonStyle={{
               maxWidth: 282,
           }}
-          // enablePasswordValidation={true}
           // set forget password page 
           textInputChildren={
             <View style={{
@@ -70,9 +52,6 @@ export default function SignIn() {
                 justifyContent:  'center',
                 width: 282,
               }}>
-                {/* <Text style={{ 
-                  alignSelf: 'flex-end',
-                  }}>Forget Password ?</Text> */}
                   <TextButton 
                     style={{
                       alignSelf: 'flex-end',
@@ -82,15 +61,8 @@ export default function SignIn() {
             </View>
           }
           onPasswordChange={setPassword}
+          onRepasswordChange={setRepassword}
           > 
-          {/* <View style={{ marginTop: 16, backgroundColor: 'inherit', alignSelf: 'center', justifyContent: 'center'}}>
-              <TextButton 
-                style={{
-                  alignSelf: 'flex-end',
-                }}
-                onTextButtonPress={redirectRegisterPage}
-                >Registration</TextButton>
-          </View> */}
           </LoginScreen>
       </View>
 

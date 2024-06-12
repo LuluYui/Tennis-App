@@ -36,6 +36,7 @@ export interface ILoginScreenProps {
   passwordPlaceholder?: string;
   disableSignup?: boolean;
   disablePasswordInput?: boolean;
+  disableRepassword?: boolean;
   loginButtonText?: string;
   disableEmailValidation?: boolean;
   enablePasswordValidation?: boolean;
@@ -66,6 +67,7 @@ export interface ILoginScreenProps {
   onSignupPress: () => void;
   onEmailChange: (email: string) => void;
   onPasswordChange: (password: string) => void;
+  onRepasswordChange?: (password: string) => void;
   onFacebookPress?: () => void;
   onTwitterPress?: () => void;
   onApplePress?: () => void;
@@ -84,6 +86,7 @@ const LoginScreen: React.FC<ILoginScreenProps> = ({
   textInputContainerStyle,
   signupText = "Create an account",
   disableDivider,
+  disableRepassword,
   logoImageSource,
   onLoginPress,
   disableSocialButtons,
@@ -92,6 +95,7 @@ const LoginScreen: React.FC<ILoginScreenProps> = ({
   onSignupPress,
   onEmailChange,
   onPasswordChange,
+  onRepasswordChange,
   onFacebookPress = dummyFunction,
   onTwitterPress = dummyFunction,
   onApplePress = dummyFunction,
@@ -121,6 +125,7 @@ const LoginScreen: React.FC<ILoginScreenProps> = ({
   const [isPasswordVisible, setPasswordVisible] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [repassword, setRepassword] = React.useState("");
 
   const [isEmailTooltipVisible, setEmailTooltipVisible] =
     useStateWithCallback(false);
@@ -137,6 +142,12 @@ const LoginScreen: React.FC<ILoginScreenProps> = ({
     isPasswordTooltipVisible && setPasswordTooltipVisible(false);
     setPassword(text);
     onPasswordChange?.(text);
+  };
+
+  const handleRepasswordChange = (text: string) => {
+    isPasswordTooltipVisible && setPasswordTooltipVisible(false);
+    setRepassword(text);
+    onRepasswordChange?.(text);
   };
 
   const handleEyePress = () => {
@@ -203,6 +214,7 @@ const LoginScreen: React.FC<ILoginScreenProps> = ({
           </Text>
         </View>
       );
+
     return (
       <View style={styles.emailTextInputContainer}>
         <>
@@ -221,7 +233,7 @@ const LoginScreen: React.FC<ILoginScreenProps> = ({
     );
   };
 
-  const renderPasswordInput = () => {
+  const renderPasswordInput = (re: boolean = true) => {
     const eyeIcon = isPasswordVisible
       ? require("./local-assets/eye.png")
       : require("./local-assets/eye-off.png");
@@ -236,6 +248,8 @@ const LoginScreen: React.FC<ILoginScreenProps> = ({
         </View>
       );
 
+    const onChangePassword = !re ? handleRepasswordChange : handlePasswordChange;
+
     return (
       !disablePasswordInput && (
         <View style={styles.passwordTextInputContainer}>
@@ -245,7 +259,7 @@ const LoginScreen: React.FC<ILoginScreenProps> = ({
           <TextInput
             placeholder={passwordPlaceholder}
             secureTextEntry={!isPasswordVisible}
-            onChangeText={handlePasswordChange}
+            onChangeText={onChangePassword}
             enableIcon
             iconImageSource={eyeIcon}
             autoCapitalize="none"
@@ -260,12 +274,16 @@ const LoginScreen: React.FC<ILoginScreenProps> = ({
     );
   };
 
+
   const renderTextInputContainer = () => {
+    const repassword_tag = disableRepassword ? true : false
+
     return (
       customTextInputs || (
         <View style={[styles.textInputContainer, textInputContainerStyle]}>
           {renderEmailInput()}
           {renderPasswordInput()}
+          {!disableRepassword && renderPasswordInput(repassword_tag)}
           {textInputChildren}
         </View>
       )
@@ -346,10 +364,10 @@ const LoginScreen: React.FC<ILoginScreenProps> = ({
       {renderTextInputContainer()}
       {renderLoginButton()}
       {renderSignUp()}
-      {/* {renderDivider()} */}
-      {/* <View style={styles.socialLoginContainer}>
+      {renderDivider()}
+      <View style={styles.socialLoginContainer}>
         {customSocialLoginButtons || renderDefaultSocialLoginButtons()}
-      </View> */}
+      </View>
       {children}
     </SafeAreaView>
   );
