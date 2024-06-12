@@ -35,9 +35,14 @@ export function emu_firebase() {
       }
     } else {
       console.log('App exists, getting app')
-      app = getApp();
-      auth = getAuth(app);
-      db = getDatabase(app);
+      try{
+        app = getApp();
+        auth = getAuth(app);
+        db = getDatabase(app);
+      } catch (error) { 
+        console.log("[ERROR] getting Authentication before Firebase App initialized " + error)
+
+      }
       // isSupported().then((yes) => {
       //   console.log('getting the analytics', JSON.stringify(app, null, 4))
       //   analytics = getAnalytics(app);
@@ -72,15 +77,18 @@ export function emu_firebase() {
     });
 
   // Listen to authentication state changes
-  onAuthStateChanged(auth, (user) => {
-    console.log(user)
-    
-    if (user) {
-      console.log('User is signed in:', user);
-    } else {
-      console.log('No user is signed in.');
-    }
-  });
+  if (auth) {
+    onAuthStateChanged(auth, (user) => {
+      console.log(user)
+      
+      if (user) {
+        console.log('User is signed in:', user);
+      } else {
+        console.log('No user is signed in.');
+      }
+    });
+
+  }
 
 
   function test_setget() {
