@@ -248,8 +248,6 @@ const LoginScreen: React.FC<ILoginScreenProps> = ({
         </View>
       );
 
-    const onChangePassword = !re ? handleRepasswordChange : handlePasswordChange;
-
     return (
       !disablePasswordInput && (
         <View style={styles.passwordTextInputContainer}>
@@ -259,7 +257,7 @@ const LoginScreen: React.FC<ILoginScreenProps> = ({
           <TextInput
             placeholder={passwordPlaceholder}
             secureTextEntry={!isPasswordVisible}
-            onChangeText={onChangePassword}
+            onChangeText={(!re ? handleRepasswordChange : handlePasswordChange)}
             enableIcon
             iconImageSource={eyeIcon}
             autoCapitalize="none"

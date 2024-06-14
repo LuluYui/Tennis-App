@@ -1,7 +1,7 @@
 import { router, Stack } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 
-import { useSession } from './ctx';
+import { useSession } from '../../components/Authentication/ctx';
 import React, {useEffect} from 'react';
 
 import { TextInput } from 'react-native';

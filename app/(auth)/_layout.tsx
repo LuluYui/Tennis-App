@@ -16,14 +16,10 @@ export const unstable_settings = {
 }
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
   
   return (
-        // <Stack>
-        //     <Stack.Screen name="(app)" options={{ headerShown: false }} />
-        //     <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-        //     <Stack.Screen name="registration" options={{ presentation: 'modal' }} />
-        // </Stack>
-        <Stack />
+        <Stack>
+            <Stack.Screen name="(app)" options={{ headerShown: false }} />
+        </Stack>
   );
 }
