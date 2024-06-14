@@ -1,8 +1,8 @@
 import { getDatabase,child, set, ref, connectDatabaseEmulator, get } from "firebase/database";
 import { initializeApp, getApp, getApps} from "firebase/app";
-import { getAuth, onAuthStateChanged, connectAuthEmulator, signInWithEmailAndPassword} from 'firebase/auth';
+import { getAuth, onAuthStateChanged, connectAuthEmulator, signInWithEmailAndPassword, Auth} from 'firebase/auth';
 import { setLogLevel } from 'firebase/app';
-// import { getFirestore, collection, getDocs, Firestore } from 'firebase/firestore/lite';
+// @ts-ignore
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { doc, setDoc, getFirestore, connectFirestoreEmulator} from 'firebase/firestore'
@@ -21,7 +21,7 @@ export function emu_firebase() {
     measurementId: "G-CPSBG1TH81"
 };
 
-  let app, auth, db;
+  let app, auth: Auth, db;
     if(!getApps().length) {
       try {
         app = initializeApp(firebaseConfig);
@@ -79,7 +79,8 @@ export function emu_firebase() {
   // Listen to authentication state changes
   if (auth) {
     onAuthStateChanged(auth, (user) => {
-      console.log(user)
+      console.log(user
+      )
       
       if (user) {
         console.log('User is signed in:', user);
