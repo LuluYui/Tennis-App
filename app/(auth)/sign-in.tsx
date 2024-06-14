@@ -10,12 +10,14 @@ import SocialButton from "@/components/Authentication/components/social-button/S
 import emailValidator from "@/components/Authentication/helpers/emailValidator";
 import passwordValidator from "@/components/Authentication/helpers/passwordValidator";
 import TextButton from '@/components/Authentication/components/text-button/textbutton';
+import { app, auth, db } from '@/firebase/authentication'
+import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 
 export default function SignIn() {
-  const { signIn } = useSession();
+  // const { signIn } = useSession();
 
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [email, setEmail] = React.useState('test@test.com');
+  const [password, setPassword] = React.useState('123456');
   const [repassword, setRepassword] = React.useState('');
 
   const emailTextInputProps = {
@@ -28,6 +30,40 @@ export default function SignIn() {
     router.push('/registration');
   }
 
+  // useEffect(() => {
+  //   console.log(password + ' ' + username)
+  // });
+  
+  const signIn = () => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        console.log(user)
+        console.log('signed in successfully')
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+  }
+  
+  const checkAuth = () => {
+    if (auth) {
+      
+      onAuthStateChanged(auth, (user) => {
+        console.log(user)
+        
+        if (user) {
+          console.log('User is signed in:', user);
+        } else {
+          console.log('No user is signed in.');
+        }
+      });
+    }
+  }
+
   return (
 
     <View style={{ flex: 1 }} >
@@ -35,7 +71,8 @@ export default function SignIn() {
           logoImageSource={require('@/assets/images/logo-example.png')}
           onLoginPress={() => {
             signIn();
-            router.replace('/')
+            checkAuth();
+            // router.replace('/')
           }}
           onSignupPress={redirectRegisterPage}
           onEmailChange={setEmail}
@@ -56,8 +93,6 @@ export default function SignIn() {
           loginButtonStyle={{
               maxWidth: 282,
           }}
-          // enablePasswordValidation={true}
-          // set forget password page 
           textInputChildren={
             <View style={{
                 marginTop: 12, 
