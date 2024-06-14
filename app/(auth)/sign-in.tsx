@@ -1,7 +1,7 @@
 import { router, Stack } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 
-import { useSession } from './ctx';
+import { useSession } from '../../components/Authentication/ctx';
 import React, {useEffect} from 'react';
 
 import { TextInput } from 'react-native';
@@ -27,10 +27,6 @@ export default function SignIn() {
   const redirectRegisterPage = () => {
     router.push('/registration');
   }
-
-  // useEffect(() => {
-  //   console.log(password + ' ' + username)
-  // });
 
   return (
 
@@ -70,9 +66,6 @@ export default function SignIn() {
                 justifyContent:  'center',
                 width: 282,
               }}>
-                {/* <Text style={{ 
-                  alignSelf: 'flex-end',
-                  }}>Forget Password ?</Text> */}
                   <TextButton 
                     style={{
                       alignSelf: 'flex-end',
@@ -83,14 +76,6 @@ export default function SignIn() {
           }
           onPasswordChange={setPassword}
           > 
-          {/* <View style={{ marginTop: 16, backgroundColor: 'inherit', alignSelf: 'center', justifyContent: 'center'}}>
-              <TextButton 
-                style={{
-                  alignSelf: 'flex-end',
-                }}
-                onTextButtonPress={redirectRegisterPage}
-                >Registration</TextButton>
-          </View> */}
           </LoginScreen>
       </View>
 

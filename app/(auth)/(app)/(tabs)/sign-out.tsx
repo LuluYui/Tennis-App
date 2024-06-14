@@ -1,8 +1,8 @@
 import { Text, View } from 'react-native';
 
-import { useSession } from '../../ctx';
+import { useSession } from '../../../../components/Authentication/ctx';
 import { router } from 'expo-router';
-import { useStorageState } from '../../useStorageState';
+import { useStorageState } from '../../../../components/Authentication/useStorageState';
 
 export default function Index() {
   const { signOut } = useSession();
