@@ -1,9 +1,10 @@
 import { Database, getDatabase } from "firebase/database";
 import { initializeApp, getApp, getApps, FirebaseApp} from "firebase/app";
-import { Auth, getAuth } from 'firebase/auth';
+import { Auth, browserLocalPersistence, getAuth } from 'firebase/auth';
 // @ts-ignore
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from "react-native";
 
 export interface User {
     email: string,
@@ -29,10 +30,16 @@ let app: FirebaseApp, auth: Auth, db: Database;
 if(!getApps().length) {
     try {
     app = initializeApp(firebaseConfig);
-    auth = initializeAuth(app, {
-        // @ts-ignore
-        persistence: getReactNativePersistence(ReactNativeAsyncStorage)
-    });
+    if (Platform.OS !== 'web') {
+        auth = initializeAuth(app, {
+            persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+        });
+    } else {
+        auth = initializeAuth(app, {
+            persistence: browserLocalPersistence,
+        });
+    }
+    
     db = getDatabase(app);
 
     } catch(error){

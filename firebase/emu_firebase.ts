@@ -21,6 +21,8 @@ export function emu_firebase() {
     measurementId: "G-CPSBG1TH81"
 };
 
+
+
   let app, auth: Auth, db;
     if(!getApps().length) {
       try {
@@ -29,6 +31,9 @@ export function emu_firebase() {
           persistence: getReactNativePersistence(ReactNativeAsyncStorage)
         });
         db = getDatabase(app);
+      if(auth) {
+
+      }
 
       } catch(error){
         console.log("Error Initializing app: " + error);
@@ -63,57 +68,28 @@ export function emu_firebase() {
   // Set log level (this part is crucial to handle log messages correctly)
   setLogLevel('debug');
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in 
-      const user = userCredential.user;
-      console.log(user)
-      console.log('signed in successfully')
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-    });
 
+    function signin() {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
   // Listen to authentication state changes
-  if (auth) {
-    onAuthStateChanged(auth, (user) => {
-      console.log(user
-      )
+  // if (auth) {
+  //   onAuthStateChanged(auth, (user) => {
       
-      if (user) {
-        console.log('User is signed in:', user);
-      } else {
-        console.log('No user is signed in.');
-      }
-    });
-
+  //     if (user) {
+  //       console.log('User is signed in:', user);
+  //     } else {
+  //       console.log('No user is signed in.');
+  //     }
+  //   });
+  // }
   }
-
-
-  function test_setget() {
-    console.log('testing setget')
-    // set(ref(db, '/users/' + '1'), {
-    //   username: 'someone',
-    //   email: 'email@email.com',
-    //   profile_picture : 'http://sadf.jpg'
-    // })
-    // .then(() => {
-    //   console.log('success')
-    //   // Data saved successfully!
-    // })
-    // .catch((error) => {
-    //   console.log(error)
-    //   // The write failed...
-    // });
-
-    // get(child(ref(db), '/users/1/')).then((r) => {
-    //   console.log(r)
-    // })
-    // console.log(JSON.stringify(db, null, 4));
-  }
-
-  // test_setget()
-
 }
