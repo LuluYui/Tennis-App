@@ -1,7 +1,6 @@
 import { Database, getDatabase } from "firebase/database";
 import { initializeApp, getApp, getApps, FirebaseApp} from "firebase/app";
 import { Auth, browserLocalPersistence, getAuth } from 'firebase/auth';
-
 // @ts-ignore
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
@@ -40,6 +39,7 @@ if(!getApps().length) {
             persistence: browserLocalPersistence,
         });
     }
+    
     db = getDatabase(app);
 
     } catch(error){

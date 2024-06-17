@@ -1,4 +1,4 @@
-import { router, Stack } from 'expo-router';
+import { Redirect, router, Stack } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 
 import { useSession } from '../../components/Authentication/ctx';
@@ -11,7 +11,7 @@ import emailValidator from "@/components/Authentication/helpers/emailValidator";
 import passwordValidator from "@/components/Authentication/helpers/passwordValidator";
 import TextButton from '@/components/Authentication/components/text-button/textbutton';
 import { app, auth, db } from '@/firebase/authentication'
-import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
+import { onAuthStateChanged, signInWithEmailAndPassword, User } from 'firebase/auth';
 
 export default function SignIn() {
   const { signIn } = useSession();
@@ -19,6 +19,8 @@ export default function SignIn() {
   const [email, setEmail] = React.useState('test@test.com');
   const [password, setPassword] = React.useState('123456');
   const [repassword, setRepassword] = React.useState('');
+  const [user, setUser] = React.useState<User>();
+  
 
   const emailTextInputProps = {
           style: {
@@ -30,30 +32,13 @@ export default function SignIn() {
     router.push('/registration');
   }
 
-  const signInFirebase = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in 
-        const user = userCredential.user;
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
-  }
-  
-  const checkAuth = () => {
-    if (auth) {
-      onAuthStateChanged(auth, (user) => {
-        console.log(user)
-        if (user) {
-          console.log('User is signed in:', user);
-        } else {
-          console.log('No user is signed in.');
-        }
-      });
+  useEffect(() => {
+    if(user) {
+      router.replace('/')
     }
-  }
+  }, [user])
+
+
 
   return (
 
@@ -61,9 +46,12 @@ export default function SignIn() {
         <LoginScreen
           logoImageSource={require('@/assets/images/logo-example.png')}
           onLoginPress={() => {
-            signInFirebase();
-            signIn();
-            router.replace('/')
+            signIn(email, password);
+            onAuthStateChanged(auth, (currentUser) => {
+              if(currentUser) {
+                setUser(currentUser);
+              }
+            });
           }}
           onSignupPress={redirectRegisterPage}
           onEmailChange={setEmail}

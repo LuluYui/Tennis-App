@@ -1,8 +1,10 @@
 import React from 'react';
 import { useStorageState } from './useStorageState';
+import { auth } from '@/firebase/authentication'
+import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 
 const AuthContext = React.createContext<{
-  signIn: (token?: string) => void;
+  signIn: (email: string, password: string) => void;
   signOut: () => void;
   session?: string | null;
   isLoading: boolean;
@@ -25,6 +27,18 @@ export function useSession() {
   return value;
 }
 
+export const checkAuth = () => {
+  if (auth) {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log('auth tokens', user.uid);
+      } else {
+        console.log('No user is signed in.');
+      }
+    });
+  }
+}
+
 export function SessionProvider(props: React.PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState('session');
   
@@ -32,11 +46,18 @@ export function SessionProvider(props: React.PropsWithChildren) {
 
     <AuthContext.Provider
       value={{
-        signIn: (token?: string) => {
-          setSession('xxx');
-        },
+        signIn: (email: string, password: string) => {
+          if(email && password) {
+              signInWithEmailAndPassword(auth, email, password)
+              .then((credentials) => {
+                console.log('successfully loging user ', credentials.user.uid)
+
+              })
+          }
+       },
         signOut: () => {
           setSession(null);
+          signOut(auth);
         },
         session,
         isLoading,

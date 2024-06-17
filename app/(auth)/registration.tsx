@@ -1,29 +1,63 @@
-import { router, Stack } from 'expo-router';
+import { router } from 'expo-router';
 import { Text, View } from '@/components/Themed';
-
-import { useSession } from '../../components/Authentication/ctx';
 import React, {useEffect} from 'react';
 
-import { TextInput } from 'react-native';
 import LoginScreen from "@/components/Authentication/LoginScreen";
-import SocialButton from "@/components/Authentication/components/social-button/SocialButton";
-import emailValidator from "@/components/Authentication/helpers/emailValidator";
-import passwordValidator from "@/components/Authentication/helpers/passwordValidator";
 import TextButton from '@/components/Authentication/components/text-button/textbutton';
+import { createUserWithEmailAndPassword, validatePassword } from 'firebase/auth';
+
+import { auth } from '@/firebase/authentication';
+import Tooltip from '@/components/Authentication/components/tooltip/Tooltip';
 
 export default function Registration() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [repassword, setRepassword] = React.useState('');
+  const [message, setMessage] = React.useState('');
+  const [showTooltip, setShowToolTip] = React.useState<boolean>();
+
   console.log('re : ', repassword)
   console.log('password : ', password)
 
-  return (
+  const popSuggestions = (log: string) => {
+    setShowToolTip(true);
+    setMessage(log);
+  }
 
+  useEffect(() => {
+    if (showTooltip) {
+      setTimeout(() => {
+        setShowToolTip(undefined);
+        setMessage('')
+      }, 3000)
+    }
+  }, [showTooltip])
+  
+  return (
     <View style={{ flex: 1 }} >
         <LoginScreen
           logoImageSource={require('@/assets/images/logo-example.png')}
-          onLoginPress={() => {}}
+          onLoginPress={() => {
+            (password === repassword) ? 
+                validatePassword(auth, password).then((result) => {
+                  result.isValid ? 
+                          createUserWithEmailAndPassword(auth, email, password)
+                            .then((userCredentials) => {
+                              const user = userCredentials.user;
+                              popSuggestions(`sucessfully registered user with email : ${user.email}`);
+                              setTimeout(() => {
+                                router.back()
+                              }, 3000)
+                            })
+                            .catch((error) => {
+                              const errorCode = error.code;
+                              const errorMessage = error.message;
+                              console.log(errorCode);
+                              console.log(errorMessage);
+                            })
+                            : popSuggestions('Password is too long or too short')
+                }) : popSuggestions('Confirm Password is incorrect') 
+          }}
           onSignupPress={() => {}}
           onEmailChange={setEmail}
           loginButtonText={'Register'}
@@ -57,7 +91,18 @@ export default function Registration() {
                       alignSelf: 'flex-end',
                       color: "#acabb0",
                     }}>
+
+
                       Forget Password? </TextButton>
+                      {(showTooltip ? 
+                        <Tooltip style={{ marginTop: 150, alignSelf:'center'}}>
+                          <Text style={{ fontSize: 16}}>
+                            {message}
+                          </Text>
+                        </Tooltip>
+                        : <View></View>
+                      )
+                      }                      
             </View>
           }
           onPasswordChange={setPassword}
