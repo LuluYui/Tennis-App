@@ -14,7 +14,7 @@ import { app, auth, db } from '@/firebase/authentication'
 import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 
 export default function SignIn() {
-  // const { signIn } = useSession();
+  const { signIn } = useSession();
 
   const [email, setEmail] = React.useState('test@test.com');
   const [password, setPassword] = React.useState('123456');
@@ -30,18 +30,11 @@ export default function SignIn() {
     router.push('/registration');
   }
 
-  // useEffect(() => {
-  //   console.log(password + ' ' + username)
-  // });
-  
-  const signIn = () => {
+  const signInFirebase = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in 
         const user = userCredential.user;
-        console.log(user)
-        console.log('signed in successfully')
-        // ...
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -51,10 +44,8 @@ export default function SignIn() {
   
   const checkAuth = () => {
     if (auth) {
-      
       onAuthStateChanged(auth, (user) => {
         console.log(user)
-        
         if (user) {
           console.log('User is signed in:', user);
         } else {
@@ -70,9 +61,9 @@ export default function SignIn() {
         <LoginScreen
           logoImageSource={require('@/assets/images/logo-example.png')}
           onLoginPress={() => {
+            signInFirebase();
             signIn();
-            checkAuth();
-            // router.replace('/')
+            router.replace('/')
           }}
           onSignupPress={redirectRegisterPage}
           onEmailChange={setEmail}
