@@ -32,7 +32,7 @@ if(!getApps().length) {
     app = initializeApp(firebaseConfig);
     if (Platform.OS !== 'web') {
         auth = initializeAuth(app, {
-            persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+            persistence: [getReactNativePersistence(ReactNativeAsyncStorage), browserLocalPersistence]
         });
     } else {
         auth = initializeAuth(app, {
