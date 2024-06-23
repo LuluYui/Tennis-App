@@ -6,20 +6,39 @@
     "rules": "firestore.rules"
   },
   "emulators": {
-    "singleProjectMode": false, 
+    "singleProjectMode": false,
     "firestore": {
       "port": "8080"
     },
     "ui": {
-      "enabled": true,      
-      "port": 4000          
+      "enabled": true,
+      "port": 4000
     },
     "auth": {
       "port": "9099"
     },
     "pubsub": {
       "port": "8085"
+    },
+    "functions": {
+      "port": "5001"
     }
-  }
-
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint",
+        "npm --prefix \"$RESOURCE_DIR\" run build"
+      ]
+    }
+  ]
 }

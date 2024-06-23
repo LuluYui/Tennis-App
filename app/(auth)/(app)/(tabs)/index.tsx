@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Button, StyleSheet } from 'react-native';
 import { useEffect } from 'react';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
@@ -10,16 +10,21 @@ import { emu_firebase } from '@/firebase/emu_firebase';
 
 export default function TabOneScreen() {
 
+  emu_firebase();
 
   useEffect(() => {
-      emu_firebase();
   }, []);
 
   return (
     <View style={styles.separator} >
       {/* <WixCalendar /> */}
       {/* <ThemedCalendarScreen /> */}
+      <Button 
+        onPress={emu_firebase}
+        title='somehting'
+        />
       <Agenda />
+      
     </View>
   );
 }

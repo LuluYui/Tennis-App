@@ -23,7 +23,6 @@ export function useSession() {
       throw new Error('useSession must be wrapped in a <SessionProvider />');
     }
   }
-
   return value;
 }
 
@@ -51,7 +50,6 @@ export function SessionProvider(props: React.PropsWithChildren) {
               signInWithEmailAndPassword(auth, email, password)
               .then((credentials) => {
                 console.log('successfully loging user ', credentials.user.uid)
-
               })
           }
        },
