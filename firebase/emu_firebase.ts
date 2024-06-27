@@ -31,11 +31,11 @@ export function emu_firebase() {
   store = getFirestore(app);
   functions = getFunctions(app);
   if (__DEV__) {
-    console.log(auth)
     connectAuthEmulator(auth, 'http://127.0.0.1:9099')
     connectFirestoreEmulator(store, "127.0.0.1", 8080);
     connectFunctionsEmulator(functions, "127.0.0.1", 5001);
   }
+
   setPersistence(auth, browserLocalPersistence)
   .then(() => {
     // mock sign-in function  

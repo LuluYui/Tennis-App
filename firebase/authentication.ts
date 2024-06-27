@@ -1,9 +1,10 @@
-import { Database, getDatabase } from "firebase/database";
+import { Database, connectDatabaseEmulator, getDatabase } from "firebase/database";
 import { initializeApp, getApp, getApps, FirebaseApp} from "firebase/app";
-import { Auth, browserLocalPersistence, getAuth } from 'firebase/auth';
+import { Auth, browserLocalPersistence, getAuth, initializeAuth, getReactNativePersistence, connectAuthEmulator} from 'firebase/auth';
 // @ts-ignore
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import { Functions, getFunctions, connectFunctionsEmulator } from "firebase/functions";
+import { Firestore, getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { Platform } from "react-native";
 
 export interface User {
@@ -12,7 +13,6 @@ export interface User {
     username?: string,
     avatar?: string,
 }
-
 
 let firebaseConfig = {
     apiKey: "AIzaSyAY9WZ33Dmj09FLnAdQFXvcx-ll8FabNG0",
@@ -25,34 +25,20 @@ let firebaseConfig = {
     measurementId: "G-CPSBG1TH81"
 };
 
-let app: FirebaseApp, auth: Auth, db: Database;
+let app: FirebaseApp, auth: Auth, db: Database, store: Firestore, functions: Functions;
 
-if(!getApps().length) {
-    try {
-    app = initializeApp(firebaseConfig);
-    if (Platform.OS !== 'web') {
-        auth = initializeAuth(app, {
-            persistence: [getReactNativePersistence(ReactNativeAsyncStorage), browserLocalPersistence]
-        });
-    } else {
-        auth = initializeAuth(app, {
-            persistence: browserLocalPersistence,
-        });
-    }
-    
-    db = getDatabase(app);
+app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+auth = getAuth(app);
+db = getDatabase(app);
+store = getFirestore(app);
+functions = getFunctions(app);
 
-    } catch(error){
-    console.log("Error Initializing app: " + error);
-    }
-} else {
-    try{
-        app = getApp();
-        auth = getAuth(app);
-        db = getDatabase(app);
-    } catch (error) { 
-        console.log("[ERROR] getting Authentication before Firebase App initialized " + error)
-    }
+if (__DEV__) {
+    connectAuthEmulator(auth, "http://127.0.0.1:9099");
+    connectFirestoreEmulator(store, "http://127.0.0.1", 8080);
+    connectDatabaseEmulator(db, "http://127.0.0.1", 9000);
+    connectFunctionsEmulator(functions, "http://127.0.0.1", 5001);
 }
+Platform.OS === 'web' ?  auth.setPersistence(browserLocalPersistence) : auth.setPersistence(getReactNativePersistence(ReactNativeAsyncStorage));
 
-export { app, auth, db };
+export { app, auth, db, functions, store};
