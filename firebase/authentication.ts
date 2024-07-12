@@ -37,7 +37,7 @@ if (__DEV__) {
     connectAuthEmulator(auth, "http://127.0.0.1:9099");
     connectFirestoreEmulator(store, "http://127.0.0.1", 8080);
     connectDatabaseEmulator(db, "http://127.0.0.1", 9000);
-    connectFunctionsEmulator(functions, "http://127.0.0.1", 5001);
+    connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 }
 Platform.OS === 'web' ?  auth.setPersistence(browserLocalPersistence) : auth.setPersistence(getReactNativePersistence(ReactNativeAsyncStorage));
 

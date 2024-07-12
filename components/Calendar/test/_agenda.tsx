@@ -14,9 +14,6 @@ export default class AgendaScreen extends Component<State> {
     items: undefined
   };
 
-  // reservationsKeyExtractor = (item, index) => {
-  //   return `${item?.reservation?.day}${index}`;
-  // };
 
   render() {
     return (
@@ -24,10 +21,10 @@ export default class AgendaScreen extends Component<State> {
         testID={testIDs.agenda.CONTAINER}
         items={this.state.items}
         loadItemsForMonth={this.loadItems}
-        selected={'2017-05-16'}
-        renderItem={this.renderItem}
-        renderEmptyDate={this.renderEmptyDate}
-        rowHasChanged={this.rowHasChanged}
+        // selected={'2017-05-16'}
+        // renderItem={this.renderItem}
+        // renderEmptyDate={this.renderEmptyDate}
+        // rowHasChanged={this.rowHasChanged}
         showClosingKnob={true}
         // markingType={'period'}
         // markedDates={{
@@ -81,7 +78,7 @@ export default class AgendaScreen extends Component<State> {
     }, 1000);
   };
 
-  renderDay = (day) => {
+  renderDay = (day: any) => {
     if (day) {
       return <Text style={styles.customDay}>{day.getDay()}</Text>;
     }

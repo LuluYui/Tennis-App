@@ -20,7 +20,6 @@ export default function SignIn() {
   const [password, setPassword] = React.useState('123456');
   const [repassword, setRepassword] = React.useState('');
   const [user, setUser] = React.useState<User>();
-  
 
   const emailTextInputProps = {
           style: {
@@ -38,10 +37,7 @@ export default function SignIn() {
     }
   }, [user])
 
-
-
   return (
-
     <View style={{ flex: 1 }} >
         <LoginScreen
           logoImageSource={require('@/assets/images/logo-example.png')}
@@ -92,6 +88,5 @@ export default function SignIn() {
           > 
           </LoginScreen>
       </View>
-
   );
 }
