@@ -1,29 +1,30 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import {Alert, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 // import { Agenda, DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
 import { DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
 import { Agenda } from "@/components/Calendar/test/CalendarTheme";
 import testIDs from '../testIDs';
+import { callfunction, callScores } from '@/components/callfunction';
 
 interface State {
   items?: AgendaSchedule;
+  data?: Promise<any>;
 }
 
 export default class AgendaScreen extends Component<State> {
   state: State = {
-    items: undefined
+    items: undefined,
+    data: undefined
   };
-
 
   render() {
     return (
       <Agenda
         testID={testIDs.agenda.CONTAINER}
         items={this.state.items}
+        renderItem={this.renderItem}
         loadItemsForMonth={this.loadItems}
-        // selected={'2017-05-16'}
-        // renderItem={this.renderItem}
-        // renderEmptyDate={this.renderEmptyDate}
+        renderEmptyDate={this.renderEmptyDate}
         // rowHasChanged={this.rowHasChanged}
         showClosingKnob={true}
         // markingType={'period'}
@@ -38,7 +39,7 @@ export default class AgendaScreen extends Component<State> {
         //    '2017-05-26': {endingDay: true, color: 'gray'}}}
         // monthFormat={'yyyy'}
         // theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
-        // renderDay={this.renderDay}
+        renderDay={this.renderDay}
         // hideExtraDays={false}
         // showOnlySelectedDayItems
         // reservationsKeyExtractor={this.reservationsKeyExtractor}
@@ -48,6 +49,8 @@ export default class AgendaScreen extends Component<State> {
 
   loadItems = (day: DateData) => {
     const items = this.state.items || {};
+    const callfunc = callfunction();
+    const callScore = callScores();
 
     setTimeout(() => {
       for (let i = -15; i < 85; i++) {
@@ -68,6 +71,9 @@ export default class AgendaScreen extends Component<State> {
         }
       }
       
+      callScore.then((result) => {
+        console.log(result)
+      })
       const newItems: AgendaSchedule = {};
       Object.keys(items).forEach(key => {
         newItems[key] = items[key];
@@ -88,6 +94,7 @@ export default class AgendaScreen extends Component<State> {
   renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
     const fontSize = isFirst ? 16 : 14;
     const color = isFirst ? 'black' : '#43515c';
+
 
     return (
       <TouchableOpacity
