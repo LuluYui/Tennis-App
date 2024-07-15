@@ -1,17 +1,19 @@
 import { httpsCallable } from "firebase/functions";
 import { View } from "./Themed";
-import { functions } from "@/firebase/authentication"
+import { auth, functions } from "@/firebase/authentication"
 
-export function callfunction() : void {
+export function callfunction() : Promise<any> {
+    const user = auth.currentUser;
+    const token = user?.getIdToken()
+    console.log(functions)
 
     const callStats = httpsCallable(functions, 'callStats');
-    callStats()
+    return callStats()
         .then((result) => {
           // Read result of the Cloud Function.
           /** @type {any} */
           const data: any = result.data;
-          const sanitizedMessage = data.text;
-          console.log(sanitizedMessage)
+          return data
         })
         .catch((error) => {
             // Getting the Error details.
@@ -20,22 +22,4 @@ export function callfunction() : void {
             const details = error.details;
             // ...
           });
-    const sayHello = httpsCallable(functions, 'sayHello');
-    sayHello()
-    .then((data) => {
-
-    }) 
-    .catch((error) => {
-            // Getting the Error details.
-            const code = error.code;
-            const message = error.message;
-            const details = error.details;
-            // ...
-          });
-
   }
-
-
-// 6592 ACO Record 1 
-// 6593
-// 6602 siu aco

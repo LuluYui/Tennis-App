@@ -5,14 +5,20 @@ import callfunctions from '@/components/Authentication/callfunctions';
 import {callfunction} from '@/components/callfunction';
 
 export default function TabOneScreen() {
-  callfunction();
-  
+
   return (
     <View style={styles.separator} >
       {/* <WixCalendar /> */}
       {/* <ThemedCalendarScreen /> */}
       <Button 
-        onPress={callfunction}
+        onPress={() => {
+          const callfunc = callfunction();
+          callfunc
+          .then((result) => {
+            console.log(result)
+          })
+          
+        }}
         title='Call Functions'
         />
       <Agenda />
