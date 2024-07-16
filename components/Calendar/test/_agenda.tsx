@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component } from 'react';
 import {Alert, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 // import { Agenda, DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
 import { DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
@@ -52,6 +52,7 @@ export default class AgendaScreen extends Component<State> {
     const callfunc = callfunction();
     const callScore = callScores();
 
+    console.log(items)
     setTimeout(() => {
       for (let i = -15; i < 85; i++) {
         const time = day.timestamp + i * 24 * 60 * 60 * 1000;
@@ -70,19 +71,58 @@ export default class AgendaScreen extends Component<State> {
           }
         }
       }
-      
+
+      const scoreItems: AgendaSchedule = {}
       callScore.then((result) => {
-        console.log(result)
+        Object.keys(result).forEach(key => {
+          /** 
+           *2Fx2WJcni6GX8xUwudM2WK : 
+                  Date : "2024-05-20T00:00:00.000"
+                  Location : "LRC"
+                  LoseScore : 4
+                  LoserBH : "Mike"
+                  LoserFH : "Chi"
+                  MatchID : "3wmpFX3F9qsKn9Jat2dkHY"
+                  WinScore : 6
+                  WinnerBH : "WM" 
+                  WinnerFH : "Cadol" 
+          */
+          const date = result[key].Date.split('T')[0];
+          const location = result[key].Location;
+          const loseScore = result[key].LoseScore;
+          const loserBH = result[key].LoserBH;
+          const loserFH = result[key].LoserFH;
+          const matchID = result[key].MatchID;
+          const winScore = result[key].WinScore;
+          const winnerBH = result[key].WinnerBH;
+          const winnerFH = result[key].WinnerFH;
+          
+          // if (!scoreItems[date]) {
+          //   scoreItems[date] = [];
+          // }
+          // scoreItems[date].push({
+          //     name: `Location : ${location} \n ${loserBH} ${loserFH} ${loseScore} : ${winScore} ${winnerBH} ${winnerFH}`,
+          //     height: Math.max(50, Math.floor(Math.random() * 150)),
+          //     day: date,
+          // })
+        })
       })
+
       const newItems: AgendaSchedule = {};
       Object.keys(items).forEach(key => {
         newItems[key] = items[key];
+        // console.log(newItems)
+
       });
       this.setState({
         items: newItems
       });
     }, 1000);
   };
+  
+  convertDate = () => {
+
+  }
 
   renderDay = (day: any) => {
     if (day) {
