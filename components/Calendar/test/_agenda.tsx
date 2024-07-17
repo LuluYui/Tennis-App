@@ -8,7 +8,7 @@ import { callfunction, callScores } from '@/components/callfunction';
 
 interface State {
   items?: AgendaSchedule;
-  data?: Promise<any>;
+  data?: AgendaSchedule;
 }
 
 export default class AgendaScreen extends Component<State> {
@@ -49,10 +49,10 @@ export default class AgendaScreen extends Component<State> {
 
   loadItems = (day: DateData) => {
     const items = this.state.items || {};
-    const callfunc = callfunction();
+    let data = this.state.data || {};
+    // const callfunc = callfunction();
     const callScore = callScores();
 
-    console.log(items)
     setTimeout(() => {
       for (let i = -15; i < 85; i++) {
         const time = day.timestamp + i * 24 * 60 * 60 * 1000;
@@ -60,7 +60,7 @@ export default class AgendaScreen extends Component<State> {
 
         if (!items[strTime]) {
           items[strTime] = [];
-          
+
           const numItems = Math.floor(Math.random() * 3 + 1);
           for (let j = 0; j < numItems; j++) {
             items[strTime].push({
@@ -71,12 +71,22 @@ export default class AgendaScreen extends Component<State> {
           }
         }
       }
+      const newItems: AgendaSchedule = {};
+      Object.keys(items).forEach(key => {
+        newItems[key] = items[key];
+      });
+      this.setState({
+        items: newItems
+      });
+      console.log(this.state.items)
 
-      const scoreItems: AgendaSchedule = {}
+      let tmp: any = {};
+      // my programme
       callScore.then((result) => {
+        if (result) {
         Object.keys(result).forEach(key => {
-          /** 
-           *2Fx2WJcni6GX8xUwudM2WK : 
+          /**
+           *2Fx2WJcni6GX8xUwudM2WK :
                   Date : "2024-05-20T00:00:00.000"
                   Location : "LRC"
                   LoseScore : 4
@@ -84,8 +94,8 @@ export default class AgendaScreen extends Component<State> {
                   LoserFH : "Chi"
                   MatchID : "3wmpFX3F9qsKn9Jat2dkHY"
                   WinScore : 6
-                  WinnerBH : "WM" 
-                  WinnerFH : "Cadol" 
+                  WinnerBH : "WM"
+                  WinnerFH : "Cadol"
           */
           const date = result[key].Date.split('T')[0];
           const location = result[key].Location;
@@ -96,33 +106,31 @@ export default class AgendaScreen extends Component<State> {
           const winScore = result[key].WinScore;
           const winnerBH = result[key].WinnerBH;
           const winnerFH = result[key].WinnerFH;
-          
-          // if (!scoreItems[date]) {
-          //   scoreItems[date] = [];
-          // }
-          // scoreItems[date].push({
-          //     name: `Location : ${location} \n ${loserBH} ${loserFH} ${loseScore} : ${winScore} ${winnerBH} ${winnerFH}`,
-          //     height: Math.max(50, Math.floor(Math.random() * 150)),
-          //     day: date,
-          // })
+
+          if (!tmp[date]) {
+            tmp[date] = [];
+          }
+          tmp[date].push({
+              name: `Location : ${location} \n ${loserBH} ${loserFH} ${loseScore} : ${winScore} ${winnerBH} ${winnerFH}`,
+              height: Math.max(50, Math.floor(Math.random() * 150)),
+              day: date,
+          })
         })
+        const scoreItems: AgendaSchedule = {}
+        Object.keys(tmp).forEach(key => {
+          scoreItems[key] = tmp[key];
+        });
+        this.setState({
+          data: tmp
+        });
+        console.log(this.state.data)
+        }
+
       })
 
-      const newItems: AgendaSchedule = {};
-      Object.keys(items).forEach(key => {
-        newItems[key] = items[key];
-        // console.log(newItems)
-
-      });
-      this.setState({
-        items: newItems
-      });
     }, 1000);
   };
-  
-  convertDate = () => {
 
-  }
 
   renderDay = (day: any) => {
     if (day) {
