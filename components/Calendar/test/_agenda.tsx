@@ -21,12 +21,17 @@ export default class AgendaScreen extends Component<State> {
     return (
       <Agenda
         testID={testIDs.agenda.CONTAINER}
-        items={this.state.items}
+        items={this.state.data}
         renderItem={this.renderItem}
         loadItemsForMonth={this.loadItems}
         renderEmptyDate={this.renderEmptyDate}
-        // rowHasChanged={this.rowHasChanged}
+        rowHasChanged={this.rowHasChanged}
         showClosingKnob={true}
+        futureScrollRange={50}
+        pastScrollRange={50}
+        overScrollMode='always'
+        // initialDate='2024-05-06'
+        selected={'2023-05-05'}
         // markingType={'period'}
         // markedDates={{
         //    '2017-05-08': {textColor: '#43515c'},
@@ -48,40 +53,13 @@ export default class AgendaScreen extends Component<State> {
   }
 
   loadItems = (day: DateData) => {
-    const items = this.state.items || {};
-    let data = this.state.data || {};
-    // const callfunc = callfunction();
     const callScore = callScores();
+    const items = this.state.items || {};
 
     setTimeout(() => {
-      for (let i = -15; i < 85; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = this.timeToString(time);
-
-        if (!items[strTime]) {
-          items[strTime] = [];
-
-          const numItems = Math.floor(Math.random() * 3 + 1);
-          for (let j = 0; j < numItems; j++) {
-            items[strTime].push({
-              name: 'Item for ' + strTime + ' #' + j,
-              height: Math.max(50, Math.floor(Math.random() * 150)),
-              day: strTime
-            });
-          }
-        }
-      }
-      const newItems: AgendaSchedule = {};
-      Object.keys(items).forEach(key => {
-        newItems[key] = items[key];
-      });
-      this.setState({
-        items: newItems
-      });
-      console.log(this.state.items)
-
-      let tmp: any = {};
       // my programme
+      let tmp: any = {};
+      let scoreItems: AgendaSchedule = {}
       callScore.then((result) => {
         if (result) {
         Object.keys(result).forEach(key => {
@@ -112,29 +90,43 @@ export default class AgendaScreen extends Component<State> {
           }
           tmp[date].push({
               name: `Location : ${location} \n ${loserBH} ${loserFH} ${loseScore} : ${winScore} ${winnerBH} ${winnerFH}`,
+              // name: `${location}`,
               height: Math.max(50, Math.floor(Math.random() * 150)),
               day: date,
           })
         })
-        const scoreItems: AgendaSchedule = {}
+
+      for (let i = -15; i < 85; i++) {
+        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
+        const strTime = this.timeToString(time);
+        if (!tmp[strTime]) {
+          tmp[strTime] = [];
+        }
+      }
+      const newItems: AgendaSchedule = {};
+      Object.keys(items).forEach(key => {
+        newItems[key] = items[key];
+      });
+      this.setState({
+        items: newItems
+      });
         Object.keys(tmp).forEach(key => {
           scoreItems[key] = tmp[key];
         });
         this.setState({
           data: tmp
         });
-        console.log(this.state.data)
         }
-
       })
-
     }, 1000);
   };
 
 
   renderDay = (day: any) => {
     if (day) {
-      return <Text style={styles.customDay}>{day.getDay()}</Text>;
+      console.log(day)
+      console.log(day.getDay())
+      return <Text style={styles.customDay}>{day.getDate()}</Text>;
     }
     return <View style={styles.dayItem}/>;
   };
@@ -142,7 +134,6 @@ export default class AgendaScreen extends Component<State> {
   renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
     const fontSize = isFirst ? 16 : 14;
     const color = isFirst ? 'black' : '#43515c';
-
 
     return (
       <TouchableOpacity
@@ -158,7 +149,6 @@ export default class AgendaScreen extends Component<State> {
   renderEmptyDate = () => {
     return (
       <View style={styles.emptyDate}>
-        <Text>This is empty date!</Text>
       </View>
     );
   };
@@ -190,7 +180,7 @@ const styles = StyleSheet.create({
   customDay: {
     margin: 10,
     fontSize: 24,
-    color: 'green'
+    color: '#87CEFA'
   },
   dayItem: {
     marginLeft: 34

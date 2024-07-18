@@ -17,6 +17,8 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const TAB_ONE_TITLE = 'Schedule';
+  const TAB_TWO_TITLE = 'Statistics';
 
   return (
     <Tabs
@@ -30,7 +32,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
+          title: TAB_ONE_TITLE,
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
@@ -49,9 +51,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="statistics"
         options={{
-          title: 'Tab Two',
+          title: TAB_TWO_TITLE,
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
