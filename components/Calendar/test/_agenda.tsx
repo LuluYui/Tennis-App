@@ -90,7 +90,6 @@ export default class AgendaScreen extends Component<State> {
           }
           tmp[date].push({
               name: `Location : ${location} \n ${loserBH} ${loserFH} ${loseScore} : ${winScore} ${winnerBH} ${winnerFH}`,
-              // name: `${location}`,
               height: Math.max(50, Math.floor(Math.random() * 150)),
               day: date,
           })
@@ -123,11 +122,11 @@ export default class AgendaScreen extends Component<State> {
 
 
   renderDay = (day: any) => {
+    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     if (day) {
-      console.log(day)
-      console.log(day.getDay())
-      return <Text style={styles.customDay}>{day.getDate()}</Text>;
+      return <Text style={styles.customDay}>{`${weekdays[day.getDay()]} \n ${day.getDate()}`}</Text>;
     }
+    // return <Text style={styles.customDay}>{`${weekdays[day.getDay()]} \n ${day.getDate()}`}</Text>;
     return <View style={styles.dayItem}/>;
   };
 
@@ -135,6 +134,7 @@ export default class AgendaScreen extends Component<State> {
     const fontSize = isFirst ? 16 : 14;
     const color = isFirst ? 'black' : '#43515c';
 
+    // Handle the rendering style of the items
     return (
       <TouchableOpacity
         testID={testIDs.agenda.ITEM}
@@ -180,9 +180,10 @@ const styles = StyleSheet.create({
   customDay: {
     margin: 10,
     fontSize: 24,
+    fontFamily: 'Courier',
     color: '#87CEFA'
   },
   dayItem: {
-    marginLeft: 34
+    marginLeft: 76
   }
 });
