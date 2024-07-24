@@ -1,4 +1,4 @@
-import { functions } from '@/firebase/authentication'
+import { functions } from '@/firebase/authentication.web'
 import { httpsCallable } from 'firebase/functions'
 
 export default function callfunctions() {

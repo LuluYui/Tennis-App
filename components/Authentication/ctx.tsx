@@ -47,9 +47,14 @@ export function SessionProvider(props: React.PropsWithChildren) {
       value={{
         signIn: (email: string, password: string) => {
           if(email && password) {
+
               signInWithEmailAndPassword(auth, email, password)
               .then((credentials) => {
                 console.log('successfully loging user ', credentials.user.uid)
+              })
+              .catch(e=> {
+                console.log(e)
+
               })
           }
        },
