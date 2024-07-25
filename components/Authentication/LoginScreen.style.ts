@@ -104,7 +104,6 @@ export default StyleSheet.create<Style>({
     alignItems: "center",
     justifyContent: "center",
   },
-
   facebookSocialButtonTextStyle: {
     color: "#4267B2",
   },

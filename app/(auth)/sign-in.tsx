@@ -21,11 +21,6 @@ export default function SignIn() {
   const [repassword, setRepassword] = React.useState('');
   const [user, setUser] = React.useState<User>();
 
-  const emailTextInputProps = {
-          style: {
-            maxWidth: 768,
-          },
-        };
 
   const redirectRegisterPage = () => {
     router.push('/registration');
@@ -57,12 +52,10 @@ export default function SignIn() {
           disableSocialButtons
           emailTextInputProps={{
             style: {
-              maxWidth: 282,
             }
           }}
           passwordTextInputProps={{
             style: {
-              maxWidth: 282,
             }
           }}
           loginButtonStyle={{
