@@ -45,10 +45,11 @@ if (__DEV__) {
         connectDatabaseEmulator(db, "http://127.0.0.1", 9000);
         connectFunctionsEmulator(functions, "127.0.0.1", 5001);
     } else { 
-        connectAuthEmulator(auth, "http://192.168.24.105:9099");
-        connectFirestoreEmulator(store, "http://192.168.24.105", 8080);
-        connectDatabaseEmulator(db, "http://192.168.24.105", 9000);
-        connectFunctionsEmulator(functions, "192.168.24.105", 5001);
+        const ipAddr = '192.168.238.105'
+        connectAuthEmulator(auth, `http://${ipAddr}:9099`);
+        connectFirestoreEmulator(store, `http://${ipAddr}`, 8080);
+        connectDatabaseEmulator(db, `http://${ipAddr}`, 9000);
+        connectFunctionsEmulator(functions, `${ipAddr}`, 5001);
     }
 }
 

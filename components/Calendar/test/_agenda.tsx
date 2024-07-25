@@ -180,8 +180,8 @@ const styles = StyleSheet.create({
   customDay: {
     margin: 10,
     fontSize: 24,
-    fontFamily: 'Courier',
-    color: '#87CEFA'
+    color: '#87CEFA',
+    fontFamily: 'monospace'
   },
   dayItem: {
     marginLeft: 76
