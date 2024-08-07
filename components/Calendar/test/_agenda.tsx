@@ -4,7 +4,7 @@ import {Alert, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import { DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
 import { Agenda } from "@/components/Calendar/test/CalendarTheme";
 import testIDs from '../testIDs';
-import { callfunction, callScores } from '@/components/callfunction';
+import {  callScores } from '@/components/callfunction';
 
 interface State {
   items?: AgendaSchedule;

@@ -11,10 +11,6 @@ function TabBarIcon(props: {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
-export const unstable_settings = {
-  initialRouteName: 'sign-in'
-}
-
 export default function TabLayout() {
   
   return (

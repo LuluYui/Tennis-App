@@ -2,7 +2,7 @@ import { httpsCallable } from "firebase/functions";
 import { View } from "./Themed";
 import { auth, functions } from "@/firebase/authentication"
 
-export function callfunction() : Promise<any> {
+export function callStats() : Promise<any> {
     const user = auth.currentUser;
     const token = user?.getIdToken()
 
@@ -24,7 +24,6 @@ export function callfunction() : Promise<any> {
   }
 
 export function callScores() : Promise<any> {
-
     const callScores = httpsCallable(functions, 'callScores');
     return callScores()
         .then((result) => {
