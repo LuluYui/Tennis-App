@@ -43,5 +43,5 @@ export function Agenda(props: themedCalendarProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
-  return <DefaultAgenda key={color} theme={{calendarBackground: color}} {...otherProps} />
+  return <DefaultAgenda key={color} theme={{calendarBackground: color, reservationsBackgroundColor: color}} {...otherProps} />
 }

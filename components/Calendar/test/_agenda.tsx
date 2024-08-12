@@ -1,10 +1,13 @@
 import React, {Component } from 'react';
-import {Alert, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {Alert, StyleSheet, TouchableOpacity} from 'react-native';
+import { Text, View } from '@/components/Themed';
 // import { Agenda, DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
 import { DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
 import { Agenda } from "@/components/Calendar/test/CalendarTheme";
 import testIDs from '../testIDs';
 import {  callScores } from '@/components/callfunction';
+import { appColors } from '@/constants/Colors';
+import { app } from '@/firebase/authentication';
 
 interface State {
   items?: AgendaSchedule;
@@ -43,7 +46,7 @@ export default class AgendaScreen extends Component<State> {
         //    '2017-05-25': {color: 'gray'},
         //    '2017-05-26': {endingDay: true, color: 'gray'}}}
         // monthFormat={'yyyy'}
-        // theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
+        // theme={{reservationsBackgroundColor: appColors.viewBackground.dark}}
         renderDay={this.renderDay}
         // hideExtraDays={false}
         // showOnlySelectedDayItems
@@ -127,7 +130,7 @@ export default class AgendaScreen extends Component<State> {
       return <Text style={styles.customDay}>{`${weekdays[day.getDay()]} \n ${day.getDate()}`}</Text>;
     }
     // return <Text style={styles.customDay}>{`${weekdays[day.getDay()]} \n ${day.getDate()}`}</Text>;
-    return <View style={styles.dayItem}/>;
+    return <View style={styles.dayItem} />;
   };
 
   renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
@@ -148,7 +151,7 @@ export default class AgendaScreen extends Component<State> {
 
   renderEmptyDate = () => {
     return (
-      <View style={styles.emptyDate}>
+      <View style={styles.emptyDate} >
       </View>
     );
   };
@@ -165,7 +168,7 @@ export default class AgendaScreen extends Component<State> {
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: 'white',
+    backgroundColor: "#87CEFA",
     flex: 1,
     borderRadius: 5,
     padding: 10,

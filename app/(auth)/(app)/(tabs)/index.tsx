@@ -2,27 +2,15 @@ import { useState } from 'react';
 import { Button, StyleSheet } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import Agenda from '@/components/Calendar/test/_agenda';
-import callfunctions from '@/components/Authentication/callfunctions';
-import {callfunction} from '@/components/callfunction';
+import { appColors } from '@/constants/Colors';
+// import callfunctions from '@/components/Authentication/callfunctions';
+// import {callfunction} from '@/components/callfunction';
 
 export default function TabOneScreen() {
 
   return (
-    <View style={styles.separator} >
-      {/* <WixCalendar /> */}
-      {/* <ThemedCalendarScreen /> */}
-      {/* <Button
-        onPress={() => {
-          const callfunc = callfunction();
-          callfunc
-          .then((result) => {
-            // console.log(result)
-          })
-        }}
-        title='Call Functions'
-        /> */}
+    <View style={styles.separator} darkColor={appColors.viewBackground.dark}>
       <Agenda
-      // data={data}
       />
     </View>
   );
