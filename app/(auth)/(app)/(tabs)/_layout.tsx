@@ -57,16 +57,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
-
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="sign-out"
         options={{
           title: 'signout',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
-      />
-
-
+      /> */}
     </Tabs>
   );
 }
