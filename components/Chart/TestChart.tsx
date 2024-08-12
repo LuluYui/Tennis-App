@@ -100,6 +100,9 @@ export default function TestChart(props: { segment: string }) {
   const activeDate = useDerivedValue(() => {
     if (!isFirstPressActive) return "Single or multi-touch the chart";
 
+    // console.log(JSON.parse(`${firstTouch.x.value.value}`));
+    const names = firstTouch.x.value.value.toString();
+    console.log(typeof firstTouch.x.value.value)
     // One-touch only
     if (!isSecondPressActive) return `${firstTouch.x.value.value}`;
 
@@ -457,6 +460,13 @@ const MONTHS = [
   "Nov",
   "Dec",
 ];
+
+const formatName = (name: string) => {
+  const nameArray = Array.from(name);
+  console.log(nameArray);
+
+  return name
+};
 
 const formatDate = (ms: number) => {
   "worklet";
