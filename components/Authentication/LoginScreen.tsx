@@ -2,16 +2,14 @@ import * as React from "react";
 import {
   Image,
   ImageStyle,
-  SafeAreaView,
   StatusBar,
   StyleProp,
-  Text,
   TextStyle,
   TouchableOpacity,
-  View,
   ViewStyle,
   LayoutAnimation,
 } from "react-native";
+import { Text, View, SafeAreaView } from "@/components/Themed";
 import TextInput, {
   IInteractiveTextInputProps,
 } from "@/components/Authentication/components/InteractiveTextInput";
@@ -63,6 +61,7 @@ export interface ILoginScreenProps {
   textInputChildren?: React.ReactNode;
   customLogo?: React.ReactNode;
   customDivider?: React.ReactNode;
+  darkColor?: string;
   onLoginPress: () => void;
   onSignupPress: () => void;
   onEmailChange: (email: string) => void;
@@ -77,6 +76,7 @@ export interface ILoginScreenProps {
 
 const LoginScreen: React.FC<ILoginScreenProps> = ({
   style,
+  darkColor,
   dividerStyle,
   logoImageStyle,
   loginTextStyle,
@@ -221,7 +221,7 @@ const LoginScreen: React.FC<ILoginScreenProps> = ({
           {!disableEmailTooltip && isEmailTooltipVisible && (
             <Tooltip>{tooltipContent()}</Tooltip>
           )}
-          <TextInput
+         <TextInput
             placeholder={emailPlaceholder}
             onChangeText={handleEmailChange}
             autoCapitalize="none"
@@ -278,7 +278,7 @@ const LoginScreen: React.FC<ILoginScreenProps> = ({
 
     return (
       customTextInputs || (
-        <View style={[styles.textInputContainer, textInputContainerStyle]}>
+        <View style={[styles.textInputContainer, textInputContainerStyle]} darkColor={darkColor}>
           {renderEmailInput()}
           {renderPasswordInput()}
           {!disableRepassword && renderPasswordInput(repassword_tag)}
@@ -356,14 +356,14 @@ const LoginScreen: React.FC<ILoginScreenProps> = ({
     ) : null;
 
   return (
-    <SafeAreaView style={[styles.container, style]}>
+    <SafeAreaView style={[styles.container, style]} darkColor={darkColor}>
       <StatusBar barStyle="dark-content" />
-      {renderLogo()}
-      {renderTextInputContainer()}
-      {renderLoginButton()}
-      {renderSignUp()}
-      {renderDivider()}
-      <View style={styles.socialLoginContainer}>
+        {renderLogo()}
+        {renderTextInputContainer()}
+        {renderLoginButton()}
+        {renderSignUp()}
+        {renderDivider()}
+      <View style={styles.socialLoginContainer} >
         {customSocialLoginButtons || renderDefaultSocialLoginButtons()}
       </View>
       {children}

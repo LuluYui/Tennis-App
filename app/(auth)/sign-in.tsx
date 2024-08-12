@@ -13,14 +13,18 @@ import TextButton from '@/components/Authentication/components/text-button/textb
 import { app, auth, db } from '@/firebase/authentication'
 import { onAuthStateChanged, signInWithEmailAndPassword, User } from 'firebase/auth';
 
+import Colors from '@/constants/Colors';
+import { useColorScheme } from '@/components/useColorScheme';
+import { appColors } from '@/constants/Colors';
+
 export default function SignIn() {
   const { signIn } = useSession();
-
   const [email, setEmail] = React.useState('test@test.com');
   const [password, setPassword] = React.useState('123456');
   const [repassword, setRepassword] = React.useState('');
   const [user, setUser] = React.useState<User>();
-
+  const colorScheme = useColorScheme();
+  const [darkColor, setDarkColor] = React.useState(appColors.viewBackground.dark);
 
   const redirectRegisterPage = () => {
     router.push('/registration');
@@ -33,9 +37,10 @@ export default function SignIn() {
   }, [user])
 
   return (
-    <View style={{ flex: 1 }} >
+    <View style={{ flex: 1}} >
         <LoginScreen
           logoImageSource={require('@/assets/images/logo-example.png')}
+          darkColor={`${darkColor}`}
           onLoginPress={() => {
             signIn(email, password);
             onAuthStateChanged(auth, (currentUser) => {
@@ -64,11 +69,12 @@ export default function SignIn() {
           textInputChildren={
             <View style={{
                 marginTop: 12, 
-                backgroundColor: 'inherit',
                 alignSelf: 'center', 
                 justifyContent:  'center',
                 width: 282,
-              }}>
+              }}
+              darkColor={darkColor}
+              >
                   <TextButton 
                     style={{
                       alignSelf: 'flex-end',

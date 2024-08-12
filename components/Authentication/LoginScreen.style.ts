@@ -42,7 +42,6 @@ interface Style {
 export default StyleSheet.create<Style>({
   container: {
     flex: 1,
-    backgroundColor: "#f7f7f7",
   },
   logoImageStyle: {
     width: 200,
