@@ -66,7 +66,8 @@ export default function TestChart(props: { segment: string }) {
     setWinRate:  40 + 30 * Math.random(),
     setLoseRate: 40 + 30 * Math.random(),
   })));
-  const description = `This chart shows off Victory’s support for large datasets and multi-touch interactions. You can use Victory’s active press array to support single or multi-touch.`
+  const description = `This chart shows off Victory’s support for large datasets and multi-touch interactions.` + 
+  `You can use Victory’s active press array to support single or multi-touch.`
 
   // On activation of gesture, play haptic feedback
   React.useEffect(() => {
@@ -100,7 +101,7 @@ export default function TestChart(props: { segment: string }) {
     if (!isFirstPressActive) return "Single or multi-touch the chart";
 
     // One-touch only
-    if (!isSecondPressActive) return formatDate(firstTouch.x.value.value);
+    if (!isSecondPressActive) return `${firstTouch.x.value.value}`;
 
     // Two-touch
     const early =
@@ -108,9 +109,7 @@ export default function TestChart(props: { segment: string }) {
         ? firstTouch
         : secondTouch;
     const late = early === firstTouch ? secondTouch : firstTouch;
-    return `${formatDate(early.x.value.value)} - ${formatDate(
-      late.x.value.value,
-    )}`;
+    return `${early.x.value.value} - ${late.x.value.value}`;
   });
 
   // Active high display
@@ -132,7 +131,7 @@ export default function TestChart(props: { segment: string }) {
 
         return `Current WinRate : ${early.y.high.value.value.toFixed(
       2,
-    )} – $${late.y.high.value.value.toFixed(2)}`;
+    )} – ${late.y.high.value.value.toFixed(2)}`;
   });
 
   // Determine if the selected range has a positive delta, which will be used to conditionally pick colors.
@@ -200,6 +199,7 @@ export default function TestChart(props: { segment: string }) {
                     textColor={textColor}
                     lineColor={isDark ? "#71717a" : "#d4d4d8"}
                     indicatorColor={indicatorColor}
+                    topOffset={30}
                   />
                 </>
               )}
@@ -214,7 +214,7 @@ export default function TestChart(props: { segment: string }) {
                     textColor={textColor}
                     lineColor={isDark ? "#71717a" : "#d4d4d8"}
                     indicatorColor={indicatorColor}
-                    topOffset={16}
+                    topOffset={30}
                   />
                 </>
               )}
@@ -413,7 +413,7 @@ const ActiveValueIndicator = ({
   );
   // Text label
   const activeValueDisplay = useDerivedValue(
-    () => "$" + activeValue.value.toFixed(2),
+    () => activeValue.value.toFixed(2),
   );
   const activeValueWidth = useDerivedValue(
     () => font?.measureText(activeValueDisplay.value).width || 0,
