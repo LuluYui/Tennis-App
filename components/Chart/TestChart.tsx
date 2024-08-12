@@ -7,6 +7,8 @@ import {
   useChartPressState,
   useLinePath,
 } from "victory-native";
+import * as Haptics from "expo-haptics";
+import { useDarkMode } from "react-native-dark";
 import {
   Circle,
   Group,
@@ -36,6 +38,7 @@ import { AnimatedText } from "./AnimatedText";
 import { appColors } from "@/constants/Colors";
 import { useColorScheme } from "react-native";
 import { callStats } from "../callfunction";
+import { InfoCard } from "./InfoCard";
 
 interface DualStat {
   [key: string]: any;
@@ -44,10 +47,11 @@ interface DualStat {
 const initChartPressState = { x: 0, y: { high: 0 } } as const;
 
 export default function TestChart(props: { segment: string }) {
-  const isDark = useColorScheme() === 'dark';
+  const isDark = useDarkMode();
   const colorPrefix = isDark ? "dark" : "light";
   const font = useFont(inter, 12);
   const textColor = isDark ? appColors.text.dark : appColors.text.light;
+
   const { state: firstTouch, isActive: isFirstPressActive } =
     useChartPressState(initChartPressState);
   const { state: secondTouch, isActive: isSecondPressActive } =
@@ -61,6 +65,15 @@ export default function TestChart(props: { segment: string }) {
     setWinRate:  40 + 30 * Math.random(),
     setLoseRate: 40 + 30 * Math.random(),
   })));
+  const description = `This chart shows off Victory’s support for large datasets and multi-touch interactions. You can use Victory’s active press array to support single or multi-touch.`
+
+  // On activation of gesture, play haptic feedback
+  React.useEffect(() => {
+    if (isFirstPressActive) Haptics.selectionAsync().catch(() => null);
+  }, [isFirstPressActive]);
+  React.useEffect(() => {
+    if (isSecondPressActive) Haptics.selectionAsync().catch(() => null);
+  }, [isSecondPressActive]);
 
   useEffect(()=>{
     callStats().then((result: DualStat) => {
@@ -87,6 +100,7 @@ export default function TestChart(props: { segment: string }) {
 
     // One-touch only
     if (!isSecondPressActive) return formatDate(firstTouch.x.value.value);
+
     // Two-touch
     const early =
       firstTouch.x.value.value < secondTouch.x.value.value
@@ -100,11 +114,13 @@ export default function TestChart(props: { segment: string }) {
 
   // Active high display
   const activeHigh = useDerivedValue(() => {
-    if (!isFirstPressActive) return "—";
+    if (!isFirstPressActive) {
+      return "—";
+    }
 
     // One-touch
     if (!isSecondPressActive)
-      return "$" + firstTouch.y.high.value.value.toFixed(2);
+      return "score : " + firstTouch.y.high.value.value.toFixed(2);
 
     // Two-touch
     const early =
@@ -113,7 +129,7 @@ export default function TestChart(props: { segment: string }) {
         : secondTouch;
     const late = early === firstTouch ? secondTouch : firstTouch;
 
-    return `$${early.y.high.value.value.toFixed(
+    return `scores ${early.y.high.value.value.toFixed(
       2,
     )} – $${late.y.high.value.value.toFixed(2)}`;
   });
@@ -153,7 +169,7 @@ export default function TestChart(props: { segment: string }) {
 
   return (
     <SafeAreaView style={styles.scrollView}>
-      <View style={{ flex: 2, maxHeight: 500, marginBottom: 20 }}>
+      <View style={{ flex: 2, maxHeight: 500, marginBottom: 10}}>
         <CartesianChart
           data={DATA}
           xKey="players"
@@ -165,7 +181,7 @@ export default function TestChart(props: { segment: string }) {
             labelOffset: { x: 12, y: 8 },
             labelPosition: { x: "outset", y: "inset" },
             axisSide: { x: "bottom", y: "left" },
-            // formatXLabel: (ms) => format(new Date(ms), "MM/yy"),
+            formatXLabel: (ms) => `${ms}`,
             formatYLabel: (v) => `$${v}`,
             lineColor: isDark ? "#71717a" : "#d4d4d8",
             labelColor: textColor,
@@ -226,7 +242,7 @@ export default function TestChart(props: { segment: string }) {
         <View
           style={{
             paddingBottom: 16,
-            paddingTop: 0,
+            paddingTop: 2,
             alignItems: "center",
             justifyContent: "center",
             height: 80,
@@ -244,6 +260,7 @@ export default function TestChart(props: { segment: string }) {
             <AnimatedText text={activeHigh} style={activeHighStyle} />
           </>
         </View>
+          <InfoCard style={{ marginBottom: 16 }}>{description}</InfoCard>
       </ScrollView>
     </SafeAreaView>
   );
@@ -387,7 +404,7 @@ const ActiveValueIndicator = ({
   indicatorColor: SharedValue<string>;
   topOffset?: number;
 }) => {
-  const FONT_SIZE = 16;
+  const FONT_SIZE = 12;
   const font = useFont(inter, FONT_SIZE);
   const start = useDerivedValue(() => vec(xPosition.value, bottom));
   const end = useDerivedValue(() =>
@@ -454,16 +471,16 @@ const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: appColors.viewBackground.light,
     flex: 1,
-    // $dark: {
-    //   backgroundColor: appColors.viewBackground.dark,
-    // },
+    $dark: {
+      backgroundColor: appColors.viewBackground.dark,
+    },
   },
   optionsScrollView: {
     flex: 1,
     backgroundColor: appColors.cardBackground.light,
-    // $dark: {
-    //   backgroundColor: appColors.cardBackground.dark,
-    // },
+    $dark: {
+      backgroundColor: appColors.cardBackground.dark,
+    },
   },
   options: {
     paddingHorizontal: 20,

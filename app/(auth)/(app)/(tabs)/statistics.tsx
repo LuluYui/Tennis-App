@@ -16,7 +16,7 @@ export default function TabTwoScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    height: 500,
+    flex: 1,
   },
   title: {
     fontSize: 20,
