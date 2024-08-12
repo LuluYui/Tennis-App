@@ -39,6 +39,7 @@ import { appColors } from "@/constants/Colors";
 import { useColorScheme } from "react-native";
 import { callStats } from "../callfunction";
 import { InfoCard } from "./InfoCard";
+import firebase_init from "@/firebase/firebase_init";
 
 interface DualStat {
   [key: string]: any;
@@ -120,7 +121,7 @@ export default function TestChart(props: { segment: string }) {
 
     // One-touch
     if (!isSecondPressActive)
-      return "score : " + firstTouch.y.high.value.value.toFixed(2);
+      return "Current WinRate : " + firstTouch.y.high.value.value.toFixed(2);
 
     // Two-touch
     const early =
@@ -129,7 +130,7 @@ export default function TestChart(props: { segment: string }) {
         : secondTouch;
     const late = early === firstTouch ? secondTouch : firstTouch;
 
-    return `scores ${early.y.high.value.value.toFixed(
+        return `Current WinRate : ${early.y.high.value.value.toFixed(
       2,
     )} – $${late.y.high.value.value.toFixed(2)}`;
   });
@@ -182,7 +183,7 @@ export default function TestChart(props: { segment: string }) {
             labelPosition: { x: "outset", y: "inset" },
             axisSide: { x: "bottom", y: "left" },
             formatXLabel: (ms) => `${ms}`,
-            formatYLabel: (v) => `$${v}`,
+            formatYLabel: (v) => `${v}`,
             lineColor: isDark ? "#71717a" : "#d4d4d8",
             labelColor: textColor,
           }}
