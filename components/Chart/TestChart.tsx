@@ -66,8 +66,8 @@ export default function TestChart(props: { segment: string }) {
     setWinRate:  40 + 30 * Math.random(),
     setLoseRate: 40 + 30 * Math.random(),
   })));
-  const description = `This chart shows off Victory’s support for large datasets and multi-touch interactions.` + 
-  `You can use Victory’s active press array to support single or multi-touch.`
+  const description = `This chart shows the players WinRate in sequence ` + 
+  `You may put your fingers on the chart to see more details about the players statistics`
 
   // On activation of gesture, play haptic feedback
   React.useEffect(() => {
@@ -100,11 +100,13 @@ export default function TestChart(props: { segment: string }) {
   const activeDate = useDerivedValue(() => {
     if (!isFirstPressActive) return "Single or multi-touch the chart";
 
-    // console.log(JSON.parse(`${firstTouch.x.value.value}`));
-    const names = firstTouch.x.value.value.toString();
-    console.log(typeof firstTouch.x.value.value)
+    // Tmp conversion, cannot functionize it due to unknown reasons
+    const nameArray = firstTouch.x.value.value.toString();
+    const nameA = JSON.parse(nameArray.replace(/'/g, '"'));
+
     // One-touch only
-    if (!isSecondPressActive) return `${firstTouch.x.value.value}`;
+    if (!isSecondPressActive) return `${formatName(firstTouch.x.value.value)}`;
+    // if (!isSecondPressActive) return `${formatDate()}`;
 
     // Two-touch
     const early =
@@ -112,7 +114,7 @@ export default function TestChart(props: { segment: string }) {
         ? firstTouch
         : secondTouch;
     const late = early === firstTouch ? secondTouch : firstTouch;
-    return `${early.x.value.value} - ${late.x.value.value}`;
+    return `${formatName(early.x.value.value)} - ${formatName(late.x.value.value)}`;
   });
 
   // Active high display
@@ -461,23 +463,14 @@ const MONTHS = [
   "Dec",
 ];
 
-const formatName = (name: string) => {
-  const nameArray = Array.from(name);
-  console.log(nameArray);
-
-  return name
-};
-
-const formatDate = (ms: number) => {
+const formatName = (value: number) => {
   "worklet";
-
-  const date = new Date(ms);
-  const M = MONTHS[date.getMonth()];
-  const D = date.getDate();
-  const Y = date.getFullYear();
-  return `${M} ${D}, ${Y}`;
+  const nameStr = value.toString();
+    const nameArray = JSON.parse(nameStr.replace(/'/g, '"'));
+    const playerBH = nameArray[0];
+    const playerFH = nameArray[1];
+    return `BH: ${playerBH} FH: ${playerFH}`
 };
-
 const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: appColors.viewBackground.light,
