@@ -16,9 +16,6 @@ export default function Registration() {
   const [message, setMessage] = React.useState('');
   const [showTooltip, setShowToolTip] = React.useState<boolean>();
 
-  console.log('re : ', repassword)
-  console.log('password : ', password)
-
   const popSuggestions = (log: string) => {
     setShowToolTip(true);
     setMessage(log);
@@ -66,12 +63,10 @@ export default function Registration() {
           disableSocialButtons
           emailTextInputProps={{
             style: {
-              maxWidth: 282,
             }
           }}
           passwordTextInputProps={{
             style: {
-              maxWidth: 282,
             }
           }}
           loginButtonStyle={{

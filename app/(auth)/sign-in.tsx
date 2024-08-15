@@ -24,7 +24,7 @@ export default function SignIn() {
   const [repassword, setRepassword] = React.useState('');
   const [user, setUser] = React.useState<User>();
   const colorScheme = useColorScheme();
-  const [darkColor, setDarkColor] = React.useState(appColors.viewBackground.dark);
+  const [darkColor, setDarkColor] = React.useState(Colors.dark.background);
 
   const redirectRegisterPage = () => {
     router.push('/registration');
