@@ -10,8 +10,7 @@ export default function TabOneScreen() {
 
   return (
     <View style={styles.separator} darkColor={appColors.viewBackground.dark}>
-      <Agenda
-      />
+      <Agenda />
     </View>
   );
 }

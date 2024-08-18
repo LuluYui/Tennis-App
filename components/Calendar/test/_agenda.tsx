@@ -93,7 +93,15 @@ export default class AgendaScreen extends Component<State> {
           }
           tmp[date].push({
               name: `Location : ${location} \n ${loserBH} ${loserFH} ${loseScore} : ${winScore} ${winnerBH} ${winnerFH}`,
-              height: Math.max(50, Math.floor(Math.random() * 150)),
+              height: 75,
+              location: location,
+              loseScore: loseScore, 
+              loserBH: loserBH, 
+              loserFH: loserFH, 
+              matchID: matchID, 
+              winScore: winScore, 
+              winnerBH: winnerBH, 
+              winnerFH: winnerFH, 
               day: date,
           })
         })
@@ -134,8 +142,8 @@ export default class AgendaScreen extends Component<State> {
   };
 
   renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
-    const fontSize = isFirst ? 16 : 14;
-    const color = isFirst ? 'black' : '#43515c';
+    const fontSize = isFirst ? 21 : 18;
+    const color = isFirst ? 'black' : '#43515f';
 
     // Handle the rendering style of the items
     return (
@@ -144,7 +152,14 @@ export default class AgendaScreen extends Component<State> {
         style={[styles.item, {height: reservation.height}]}
         onPress={() => Alert.alert(reservation.name)}
       >
-        <Text style={{fontSize, color}}>{reservation.name}</Text>
+        {/* make a score chart here  */}
+        <Text style={{fontSize, color}}> Location : {reservation.location}</Text>
+        <View darkColor='#87CEFA' lightColor='#87CEFA' style={{ flexDirection: 'row', justifyContent: 'center'}}> 
+          <Text style={{fontSize, color}}> {reservation.winnerBH} {reservation.winnerFH} </Text>
+          <Text style={{fontSize, color}}> {reservation.winScore} - {reservation.loseScore} </Text>
+          <Text style={{fontSize, color}}> {reservation.loserBH} {reservation.loserFH} </Text>
+        </View>
+        {/* <Text style={{fontSize, color}}>{reservation.name}</Text> */}
       </TouchableOpacity>
     );
   };

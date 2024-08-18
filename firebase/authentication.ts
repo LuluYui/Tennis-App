@@ -45,7 +45,7 @@ if (__DEV__) {
         connectDatabaseEmulator(db, "http://127.0.0.1", 9000);
         connectFunctionsEmulator(functions, "127.0.0.1", 5001);
     } else { 
-        const ipAddr = '192.168.0.129'
+        const ipAddr = '192.168.1.82'
         connectAuthEmulator(auth, `http://${ipAddr}:9099`);
         connectFirestoreEmulator(store, `http://${ipAddr}`, 8080);
         connectDatabaseEmulator(db, `http://${ipAddr}`, 9000);
