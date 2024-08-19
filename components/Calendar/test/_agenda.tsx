@@ -1,5 +1,5 @@
 import React, {Component } from 'react';
-import {Alert, StyleSheet, TouchableOpacity} from 'react-native';
+import {Alert, Pressable, StyleSheet, TouchableOpacity} from 'react-native';
 import { Text, View } from '@/components/Themed';
 // import { Agenda, DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
 import { DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
@@ -8,6 +8,8 @@ import testIDs from '../testIDs';
 import {  callScores } from '@/components/callfunction';
 import { appColors } from '@/constants/Colors';
 import { app } from '@/firebase/authentication';
+import FloatingButtonComponent from './_floatingButtonComponent';
+import FloatingButton from './_floatingButtonComponent';
 
 interface State {
   items?: AgendaSchedule;
@@ -19,9 +21,14 @@ export default class AgendaScreen extends Component<State> {
     items: undefined,
     data: undefined
   };
+  
+  onPressAddScore= () => {
+
+  }
 
   render() {
     return (
+      <>
       <Agenda
         testID={testIDs.agenda.CONTAINER}
         items={this.state.data}
@@ -51,7 +58,11 @@ export default class AgendaScreen extends Component<State> {
         // hideExtraDays={false}
         // showOnlySelectedDayItems
         // reservationsKeyExtractor={this.reservationsKeyExtractor}
-      />
+        hideKnob={false}
+      >
+        </Agenda>
+        <FloatingButton />
+      </>
     );
   }
 
@@ -145,6 +156,19 @@ export default class AgendaScreen extends Component<State> {
     const fontSize = isFirst ? 21 : 18;
     const color = isFirst ? 'black' : '#43515f';
 
+    const renderItemScoreBoard = () => {
+        return (
+          <>
+            <Text style={{fontSize, color}}> Location : {reservation.location}</Text>
+            <View darkColor='#87CEFA' lightColor='#87CEFA' style={{ flexDirection: 'row', justifyContent: 'center'}}> 
+              <Text style={{fontSize, color}}> {reservation.winnerBH} {reservation.winnerFH} </Text>
+              <Text style={{fontSize, color}}> {reservation.winScore} - {reservation.loseScore} </Text>
+              <Text style={{fontSize, color}}> {reservation.loserBH} {reservation.loserFH} </Text>
+            </View>
+          </>
+        );
+      }
+
     // Handle the rendering style of the items
     return (
       <TouchableOpacity
@@ -153,16 +177,12 @@ export default class AgendaScreen extends Component<State> {
         onPress={() => Alert.alert(reservation.name)}
       >
         {/* make a score chart here  */}
-        <Text style={{fontSize, color}}> Location : {reservation.location}</Text>
-        <View darkColor='#87CEFA' lightColor='#87CEFA' style={{ flexDirection: 'row', justifyContent: 'center'}}> 
-          <Text style={{fontSize, color}}> {reservation.winnerBH} {reservation.winnerFH} </Text>
-          <Text style={{fontSize, color}}> {reservation.winScore} - {reservation.loseScore} </Text>
-          <Text style={{fontSize, color}}> {reservation.loserBH} {reservation.loserFH} </Text>
-        </View>
+        {renderItemScoreBoard()}
         {/* <Text style={{fontSize, color}}>{reservation.name}</Text> */}
       </TouchableOpacity>
     );
   };
+
 
   renderEmptyDate = () => {
     return (
@@ -203,5 +223,5 @@ const styles = StyleSheet.create({
   },
   dayItem: {
     marginLeft: 76
-  }
+  },
 });
