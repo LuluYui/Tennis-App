@@ -40,3 +40,21 @@ export function callScores() : Promise<any> {
             // ...
           });
 }
+
+export function editScore(matchID: string, data: Object) : Promise<any> {
+    const callScores = httpsCallable(functions, 'callScores');
+    return callScores()
+        .then((result) => {
+          // Read result of the Cloud Function.
+          /** @type {any} */
+          const data: any = result.data;
+          return data
+        })
+        .catch((error) => {
+            // Getting the Error details.
+            const code = error.code;
+            const message = error.message;
+            const details = error.details;
+            // ...
+          });
+}

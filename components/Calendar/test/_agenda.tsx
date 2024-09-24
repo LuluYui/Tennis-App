@@ -6,9 +6,6 @@ import { DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
 import { Agenda } from "@/components/Calendar/test/CalendarTheme";
 import testIDs from '../testIDs';
 import {  callScores } from '@/components/callfunction';
-import { appColors } from '@/constants/Colors';
-import { app } from '@/firebase/authentication';
-import FloatingButtonComponent from './_floatingButtonComponent';
 import FloatingButton from './_floatingButtonComponent';
 
 interface State {
@@ -22,51 +19,53 @@ export default class AgendaScreen extends Component<State> {
     data: undefined
   };
   
-  onPressAddScore= () => {
+  onPressAddScore= () => {  
+    // handle the add button function 
+    // 1. allow user to add a new score board record to the score table 
 
   }
 
   render() {
     return (
       <>
-      <Agenda
-        testID={testIDs.agenda.CONTAINER}
-        items={this.state.data}
-        renderItem={this.renderItem}
-        loadItemsForMonth={this.loadItems}
-        renderEmptyDate={this.renderEmptyDate}
-        rowHasChanged={this.rowHasChanged}
-        showClosingKnob={true}
-        futureScrollRange={50}
-        pastScrollRange={50}
-        overScrollMode='always'
-        // initialDate='2024-05-06'
-        selected={'2023-05-05'}
-        // markingType={'period'}
-        // markedDates={{
-        //    '2017-05-08': {textColor: '#43515c'},
-        //    '2017-05-09': {textColor: '#43515c'},
-        //    '2017-05-14': {startingDay: true, endingDay: true, color: 'blue'},
-        //    '2017-05-21': {startingDay: true, color: 'blue'},
-        //    '2017-05-22': {endingDay: true, color: 'gray'},
-        //    '2017-05-24': {startingDay: true, color: 'gray'},
-        //    '2017-05-25': {color: 'gray'},
-        //    '2017-05-26': {endingDay: true, color: 'gray'}}}
-        // monthFormat={'yyyy'}
-        // theme={{reservationsBackgroundColor: appColors.viewBackground.dark}}
-        renderDay={this.renderDay}
-        // hideExtraDays={false}
-        // showOnlySelectedDayItems
-        // reservationsKeyExtractor={this.reservationsKeyExtractor}
-        hideKnob={false}
-      >
-        </Agenda>
+        <Agenda
+          testID={testIDs.agenda.CONTAINER}
+          items={this.state.items}
+          renderItem={this.renderItem}
+          loadItemsForMonth={this.loadItems}
+          renderEmptyDate={this.renderEmptyDate}
+          rowHasChanged={this.rowHasChanged}
+          showClosingKnob={true}
+          futureScrollRange={50}
+          pastScrollRange={50}
+          overScrollMode='always'
+          // initialDate='2024-05-06'
+          selected={'2023-05-05'}
+          // markingType={'period'}
+          // markedDates={{
+          //    '2017-05-08': {textColor: '#43515c'},
+          //    '2017-05-09': {textColor: '#43515c'},
+          //    '2017-05-14': {startingDay: true, endingDay: true, color: 'blue'},
+          //    '2017-05-21': {startingDay: true, color: 'blue'},
+          //    '2017-05-22': {endingDay: true, color: 'gray'},
+          //    '2017-05-24': {startingDay: true, color: 'gray'},
+          //    '2017-05-25': {color: 'gray'},
+          //    '2017-05-26': {endingDay: true, color: 'gray'}}}
+          // monthFormat={'yyyy'}
+          // theme={{reservationsBackgroundColor: appColors.viewBackground.dark}}
+          renderDay={this.renderDay}
+          // hideExtraDays={false}
+          // showOnlySelectedDayItems
+          // reservationsKeyExtractor={this.reservationsKeyExtractor}
+          hideKnob={false}
+        >
+          </Agenda>
         <FloatingButton />
       </>
     );
   }
 
-  loadItems = (day: DateData) => {
+  loadItems = async (day: DateData) => {
     const callScore = callScores();
     const items = this.state.items || {};
 
@@ -117,6 +116,7 @@ export default class AgendaScreen extends Component<State> {
           })
         })
 
+      // fill-in empty date items
       for (let i = -15; i < 85; i++) {
         const time = day.timestamp + i * 24 * 60 * 60 * 1000;
         const strTime = this.timeToString(time);
@@ -124,21 +124,19 @@ export default class AgendaScreen extends Component<State> {
           tmp[strTime] = [];
         }
       }
-      const newItems: AgendaSchedule = {};
-      Object.keys(items).forEach(key => {
-        newItems[key] = items[key];
+
+      // O(n)
+      Object.keys(tmp).forEach(key => {
+        scoreItems[key] = tmp[key];
       });
+      // O(1)
       this.setState({
-        items: newItems
+        items: scoreItems
       });
-        Object.keys(tmp).forEach(key => {
-          scoreItems[key] = tmp[key];
-        });
-        this.setState({
-          data: tmp
-        });
-        }
-      })
+
+      }
+    })
+
     }, 1000);
   };
 
@@ -167,6 +165,11 @@ export default class AgendaScreen extends Component<State> {
             </View>
           </>
         );
+      }
+
+      const onPressHandleEdit = () => {
+        // allow user to edit the decribed score event
+
       }
 
     // Handle the rendering style of the items
