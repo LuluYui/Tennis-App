@@ -1,6 +1,6 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
+import { Link, router, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
 
 import Colors from '@/constants/Colors';
@@ -61,6 +61,20 @@ export default function TabLayout() {
         options={{
           title: 'add_gameScore',
           href: null,
+          headerLeft: () => (
+              <Pressable onPress={()=>{ router.back() }}>
+                {({ pressed }) => (
+                  <FontAwesome
+                    name="arrow-left"
+                    icon="fa-thin fa-arrow-left" 
+                    size={25}
+                    color={Colors[colorScheme ?? 'light'].text}
+                    style={{ marginLeft: 15, opacity: pressed ? 0.5 : 1 }}
+                  />
+                )}
+              </Pressable>
+          ),
+          tabBarStyle: { display: 'none'}
         }}
       />
     </Tabs>
