@@ -17,7 +17,7 @@ import { useColorScheme } from '@/components/useColorScheme';
 
 const FloatingButton = () => {
     return (
-        <Link href="/add_gameScore" asChild>
+        <Link href="/add_gameScore_screen" asChild>
             <Pressable style={styles.button} >
                 <Text style={styles.buttonText}>+</Text>
             </Pressable>

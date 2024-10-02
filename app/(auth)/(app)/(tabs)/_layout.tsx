@@ -57,7 +57,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="(screens)/add_gameScore"
+        name="(screens)/add_gameScore_screen"
         options={{
           title: 'add_gameScore',
           href: null,

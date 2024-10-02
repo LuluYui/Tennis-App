@@ -7,7 +7,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
 import { useColorScheme } from "react-native";
 import { appColors } from "@/constants/Colors";
-
+import { app, auth, db } from '@/firebase/authentication'
+import { add_gameScore } from '@/components/callfunction';
 
 export default function ADDGameScoreScreen({visible, onClose}: any) {
   const isDark = useColorScheme();
@@ -16,19 +17,39 @@ export default function ADDGameScoreScreen({visible, onClose}: any) {
   const [date, setDate] = useState(today_at_zero);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const venue = useState(['None', 'LRC', 'CRC', 'HKTC']);
-  const [selectedLocation, setSelectedLocation] = useState();
-  const [location, setLocation] = useState('');
-  const [winnerBH, setWinnerBH] = useState('');
-  const [winnerFH, setWinnerFH] = useState('');
-  const [winScore, setWinScore] = useState('');
-  const [losingScore, setLosingScore] = useState('');
-  const [loserBH, setLoserBH] = useState('');
-  const [loserFH, setLoserFH] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState('LRC');
+  const [location, setLocation] = useState('LRC');
+  const [winnerBH, setWinnerBH] = useState('Ich');
+  const [winnerFH, setWinnerFH] = useState('Mike');
+  const [winScore, setWinScore] = useState('6');
+  const [loseScore, setLoseScore] = useState('2');
+  const [loserBH, setLoserBH] = useState('Man');
+  const [loserFH, setLoserFH] = useState('Lolo');
 
   const handleSubmit = () => {
     // Validate and process the data
-    console.log({ winnerBH, winnerFH, winScore, losingScore, loserBH, loserFH });
-    console.log(selectedLocation)
+    const data = { 
+      Date: date,
+      Location: selectedLocation, 
+      WinnerBH: winnerBH,
+      WinnerFH: winnerFH, 
+      WinScore: winScore, 
+      LoseScore: loseScore, 
+      LoserBH: loserBH, 
+      LoserFH: loserFH 
+    };
+
+    try {
+      add_gameScore(data)
+        .then( (result: any) => {
+          console.log('successful received data')
+          console.log(result.message);
+          console.log(result.data);
+        })
+    } catch(e) {
+      console.log(e)
+    }
+    
     onClose(); // Close the modal after submission
   };
 
@@ -74,7 +95,7 @@ export default function ADDGameScoreScreen({visible, onClose}: any) {
         <TextInput value={winScore} onChangeText={setWinScore} style={styles.input} keyboardType="numeric" />
         
         <Text>Losing Score:</Text>
-        <TextInput value={losingScore} onChangeText={setLosingScore} style={styles.input} keyboardType="numeric" />
+        <TextInput value={loseScore} onChangeText={setLoseScore} style={styles.input} keyboardType="numeric" />
         
         <Text>Loser BH:</Text>
         <TextInput value={loserBH} onChangeText={setLoserBH} style={styles.input} />

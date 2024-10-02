@@ -23,6 +23,7 @@ export function callStats() : Promise<any> {
           });
   }
 
+// Call the scoresa result from set_scores
 export function callScores() : Promise<any> {
     const callScores = httpsCallable(functions, 'callScores');
     return callScores()
@@ -41,6 +42,7 @@ export function callScores() : Promise<any> {
           });
 }
 
+// EDIT : edit set_scores 
 export function editScore(matchID: string, data: Object) : Promise<any> {
     const callScores = httpsCallable(functions, 'callScores');
     return callScores()
@@ -48,6 +50,27 @@ export function editScore(matchID: string, data: Object) : Promise<any> {
           // Read result of the Cloud Function.
           /** @type {any} */
           const data: any = result.data;
+          return data
+        })
+        .catch((error) => {
+            // Getting the Error details.
+            const code = error.code;
+            const message = error.message;
+            const details = error.details;
+            // ...
+          });
+}
+
+// ADD : add set_scores for details 
+export function add_gameScore(data: Object) : Promise<any> {
+    const add_gameScores = httpsCallable(functions, 'add_gameScores');
+    
+    return add_gameScores(data)
+        .then((result: any) => {
+          // Read result of the Cloud Function.
+          /** @type {any} */
+          const data: any = result.data;
+          console.log('result successfully addded ', data)
           return data
         })
         .catch((error) => {
