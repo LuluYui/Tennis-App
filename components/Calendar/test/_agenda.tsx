@@ -28,6 +28,7 @@ interface State {
   loserFH: string
   date: Date,
   gameID: string,
+  refreshKey: number,
 }
 
 interface AgendaEntryGameScore extends AgendaEntry {
@@ -60,6 +61,7 @@ export default class AgendaScreen extends Component<State> {
     loserBH: '',
     loserFH: '',
     gameID: '',
+    refreshKey: 0,
   };
 
   render() {
@@ -67,6 +69,7 @@ export default class AgendaScreen extends Component<State> {
     return (
       <>
         <Agenda
+          key={this.state.refreshKey}
           testID={testIDs.agenda.CONTAINER}
           items={this.state.items}
           renderItem={this.renderItem}
@@ -127,8 +130,6 @@ export default class AgendaScreen extends Component<State> {
                   WinnerBH : "WM"
                   WinnerFH : "Cadol"
           */
-          // console.log(typeof result[key].Date)
-        // console.log(typeof result[key].Date === 'object result[key].Date.toISOString() : () => {})
           let date = ""; 
           typeof result[key].Date === "string" ? date = result[key].Date.split('T')[0] : date = new Date(result[key].Date._seconds * 1000).toISOString().split('T')[0];
           const location = result[key].Location;
@@ -209,14 +210,14 @@ export default class AgendaScreen extends Component<State> {
         );
       }
 
-    
-    // Handle the rendering style of the items
+        // Handle the rendering style of the items
     return (
       <TouchableOpacity
         testID={testIDs.agenda.ITEM}
         style={[styles.item, {height: reservation.height}]}
         onPress={() => { this.setState({ 
           editFormVisible: true, 
+          date: this.stringToDate(reservation.day),
           gameID: reservation.gameID, 
           location: reservation.location,
           loseScore: reservation.loseScore, 
@@ -243,7 +244,7 @@ export default class AgendaScreen extends Component<State> {
       
       // add the content to cloud 
       const data = {
-         date : this.state.date,
+         date : this.toLocaleISOString(this.state.date),
          gameID: this.state.gameID, 
          location: this.state.location,
          loseScore: this.state.loseScore, 
@@ -254,19 +255,22 @@ export default class AgendaScreen extends Component<State> {
          loserFH: this.state.loserFH,
       }
 
-      edit_score(this.state.selectedScore.gameID, data)
+      edit_score(data)
         .then( (result: any) => {
-          console.log('successfully updated ', this.state.selectedScore.gameID)
-          console.log(result.data);
+          const num = this.state.refreshKey;
+          this.setState({ refreshKey: num + 1})
         })
         .catch(e => console.log(e))
     };
 
     const handleDateChange = (event: any, selectedDate: Date | undefined) => {
       const currentDate = selectedDate || this.state.date;
+      // const localDate = new Date(currentDate.getTime() - currentDate.getTimezoneOffset() * 60000);
+      // console.log(currentDate.getTimezoneOffset())
+      // console.log(currentDate)
+
       this.setState({ date: currentDate, datePickerVisible: false });
     }
-    console.log(this.state.gameID)
 
     return (
         <Modal
@@ -289,10 +293,11 @@ export default class AgendaScreen extends Component<State> {
            >
             <Text style={styles.buttonText}>Selected Date </Text>
            </Pressable >
-            <Text style={styles.modalText}> {this.state.date.toISOString().split('T')[0]}</Text>
+            <Text style={styles.modalText}> {this.state.date.toLocaleString().split('T')[0]}</Text>
             {this.state.datePickerVisible && (
               <DateTimePicker
                 value={this.state.date}
+                // timeZoneName={'Asia/Hong_Kong'}
                 mode="date"
                 display="default"
                 onChange={handleDateChange}
@@ -386,10 +391,40 @@ export default class AgendaScreen extends Component<State> {
     return r1.name !== r2.name;
   };
 
+  stringToDate(dateString: string) {
+    // Split the string into components
+    const [year, month, day] = dateString.split('-').map(Number);
+     
+    // Create a new Date object (month is zero-based)
+    const date = new Date(year, month - 1, day);
+
+    return date;
+  }
+
   timeToString(time: number) {
     const date = new Date(time);
     return date.toISOString().split('T')[0];
   }
+
+  toLocaleISOString = (date: Date) => {
+    // Get the locale date string
+    const localeDate = date.toLocaleDateString('en-CA', {
+      year: 'numeric',
+      month: '2-digit', // '2-digit' for numeric month
+      day: '2-digit',
+    });
+  
+    // Get the locale time string
+    const localeTime = date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false, // Set to true for 12-hour format
+    });
+  
+    // Format the date and time to create an ISO-like string
+    return `${localeDate.replace(/\//g, '-')}T${localeTime}`;
+  };
 }
 
 const styles = StyleSheet.create({

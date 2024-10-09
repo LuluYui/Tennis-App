@@ -43,14 +43,14 @@ export function callScores() : Promise<any> {
 }
 
 // EDIT : edit set_scores 
-export function edit_score(gameID: string, data: Object) : Promise<any> {
+export function edit_score(data: Object) : Promise<any> {
     const edit_gameScores = httpsCallable(functions, 'edit_gameScores');
-    console.log('call : ', data)
     return edit_gameScores(data)
         .then((result) => {
           // Read result of the Cloud Function.
           /** @type {any} */
           const data: any = result.data;
+          console.log('call : ', data)
           return data
         })
         .catch((error) => {
