@@ -13,7 +13,7 @@ import { add_gameScore } from '@/components/callfunction';
 export default function ADDGameScoreScreen({visible, onClose}: any) {
   const isDark = useColorScheme();
   const today_at_zero = new Date();
-  today_at_zero.setHours(0,0,0,0);
+  // today_at_zero.setHours(0,0,0,0);
   const [date, setDate] = useState(today_at_zero);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const venue = useState(['None', 'LRC', 'CRC', 'HKTC']);
@@ -55,6 +55,7 @@ export default function ADDGameScoreScreen({visible, onClose}: any) {
 
   const handleDateChange = (event: any, selectedDate: any) => {
     setShowDatePicker(false);
+    console.log(selectedDate)
     setDate(selectedDate);
   }
 
@@ -63,6 +64,7 @@ export default function ADDGameScoreScreen({visible, onClose}: any) {
       <View style={styles.container}>
         <Text>Date :</Text>
         <Button title="Show Date Picker" onPress={() => setShowDatePicker(true)} />
+        
         <Text> selected: {date.toLocaleString()}</Text>
         {showDatePicker && (
           <DateTimePicker

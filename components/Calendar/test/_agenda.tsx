@@ -1,31 +1,69 @@
-import React, {Component } from 'react';
-import {Alert, Pressable, StyleSheet, TouchableOpacity} from 'react-native';
+import React, { Component } from 'react';
+import {Alert, Button, TextInput, Modal, Pressable, StyleSheet, TouchableOpacity, Appearance} from 'react-native';
 import { Text, View } from '@/components/Themed';
 // import { Agenda, DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
 import { DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
 import { Agenda } from "@/components/Calendar/test/CalendarTheme";
 import testIDs from '../testIDs';
-import {  callScores } from '@/components/callfunction';
+import {  callScores, edit_score } from '@/components/callfunction';
 import FloatingButton from './_floatingButtonComponent';
+import Colors from '@/constants/Colors';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Picker } from '@react-native-picker/picker';
 
 interface State {
   items?: AgendaSchedule;
   data?: AgendaSchedule;
+  editFormVisible: boolean;
+  player1Score: string; 
+  player2Score: string; 
+  selectedScore: any;
+  datePickerVisible: boolean,
+  location: string, 
+  winnerBH: string,
+  winnerFH: string,
+  winScore: number,
+  loseScore: number,
+  loserBH: string,
+  loserFH: string
+  date: Date,
+  gameID: string,
+}
+
+interface AgendaEntryGameScore extends AgendaEntry {
+  location: string, 
+  winnerBH: string,
+  winnerFH: string,
+  winScore: number,
+  loseScore: number,
+  loserBH: string,
+  loserFH: string
+  date: Date,
+  gameID: string,
 }
 
 export default class AgendaScreen extends Component<State> {
   state: State = {
     items: undefined,
-    data: undefined
+    data: undefined,
+    editFormVisible: false,
+    player1Score: '', 
+    player2Score: '', 
+    selectedScore: {},
+    datePickerVisible: false,
+    date: new Date(),
+    location: 'none',
+    winnerBH: '',
+    winnerFH: '',
+    winScore: 0,
+    loseScore: 0,
+    loserBH: '',
+    loserFH: '',
+    gameID: '',
   };
-  
-  onPressAddScore= () => {  
-    // handle the add button function 
-    // 1. allow user to add a new score board record to the score table 
-
-  }
 
   render() {
+
     return (
       <>
         <Agenda
@@ -60,6 +98,7 @@ export default class AgendaScreen extends Component<State> {
           hideKnob={false}
         >
           </Agenda>
+          {this.renderEditFormModel()}
         <FloatingButton />
       </>
     );
@@ -88,7 +127,10 @@ export default class AgendaScreen extends Component<State> {
                   WinnerBH : "WM"
                   WinnerFH : "Cadol"
           */
-          const date = result[key].Date.split('T')[0];
+          // console.log(typeof result[key].Date)
+        // console.log(typeof result[key].Date === 'object result[key].Date.toISOString() : () => {})
+          let date = ""; 
+          typeof result[key].Date === "string" ? date = result[key].Date.split('T')[0] : date = new Date(result[key].Date._seconds * 1000).toISOString().split('T')[0];
           const location = result[key].Location;
           const loseScore = result[key].LoseScore;
           const loserBH = result[key].LoserBH;
@@ -97,6 +139,7 @@ export default class AgendaScreen extends Component<State> {
           const winScore = result[key].WinScore;
           const winnerBH = result[key].WinnerBH;
           const winnerFH = result[key].WinnerFH;
+          const gameID = key;
 
           if (!tmp[date]) {
             tmp[date] = [];
@@ -113,6 +156,7 @@ export default class AgendaScreen extends Component<State> {
               winnerBH: winnerBH, 
               winnerFH: winnerFH, 
               day: date,
+              gameID: gameID
           })
         })
 
@@ -133,10 +177,8 @@ export default class AgendaScreen extends Component<State> {
       this.setState({
         items: scoreItems
       });
-
       }
     })
-
     }, 1000);
   };
 
@@ -150,7 +192,7 @@ export default class AgendaScreen extends Component<State> {
     return <View style={styles.dayItem} />;
   };
 
-  renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
+  renderItem = (reservation: AgendaEntryGameScore, isFirst: boolean) => {
     const fontSize = isFirst ? 21 : 18;
     const color = isFirst ? 'black' : '#43515f';
 
@@ -167,17 +209,23 @@ export default class AgendaScreen extends Component<State> {
         );
       }
 
-      const onPressHandleEdit = () => {
-        // allow user to edit the decribed score event
-
-      }
-
+    
     // Handle the rendering style of the items
     return (
       <TouchableOpacity
         testID={testIDs.agenda.ITEM}
         style={[styles.item, {height: reservation.height}]}
-        onPress={() => Alert.alert(reservation.name)}
+        onPress={() => { this.setState({ 
+          editFormVisible: true, 
+          gameID: reservation.gameID, 
+          location: reservation.location,
+          loseScore: reservation.loseScore, 
+          winScore: reservation.winScore,
+          winnerBH: reservation.winnerBH, 
+          winnerFH: reservation.winnerFH,
+          loserBH: reservation.loserBH,
+          loserFH: reservation.loserFH,
+        })}}
       >
         {/* make a score chart here  */}
         {renderItemScoreBoard()}
@@ -185,6 +233,146 @@ export default class AgendaScreen extends Component<State> {
       </TouchableOpacity>
     );
   };
+
+  renderEditFormModel = () => {
+    const handleSubmit = () => {
+      // turn off the form visibility 
+      this.setState({
+        editFormVisible: false, 
+      });
+      
+      // add the content to cloud 
+      const data = {
+         date : this.state.date,
+         gameID: this.state.gameID, 
+         location: this.state.location,
+         loseScore: this.state.loseScore, 
+         winScore: this.state.winScore,
+         winnerBH: this.state.winnerBH, 
+         winnerFH: this.state.winnerFH,
+         loserBH: this.state.loserBH,
+         loserFH: this.state.loserFH,
+      }
+
+      edit_score(this.state.selectedScore.gameID, data)
+        .then( (result: any) => {
+          console.log('successfully updated ', this.state.selectedScore.gameID)
+          console.log(result.data);
+        })
+        .catch(e => console.log(e))
+    };
+
+    const handleDateChange = (event: any, selectedDate: Date | undefined) => {
+      const currentDate = selectedDate || this.state.date;
+      this.setState({ date: currentDate, datePickerVisible: false });
+    }
+    console.log(this.state.gameID)
+
+    return (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.editFormVisible}
+          onRequestClose={() => this.setState({editFormVisible: false })}
+        >
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>Edit Tennis Scores</Text>
+           {/* Date Picker */}
+           {/* <Button title="Select Date" onPress={() => this.setState({ datePickerVisible: true })} /> */}
+           <Pressable 
+                style={styles.buttonContainer} 
+                onPress={ () => {
+                  this.setState({
+                    datePickerVisible: true,
+                  })
+                }}
+           >
+            <Text style={styles.buttonText}>Selected Date </Text>
+           </Pressable >
+            <Text style={styles.modalText}> {this.state.date.toISOString().split('T')[0]}</Text>
+            {this.state.datePickerVisible && (
+              <DateTimePicker
+                value={this.state.date}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
+              />
+            )}
+
+            {/* Location Dropdown */}
+            <Text style={styles.modalText}>Location:</Text>
+            <Picker
+              selectedValue={this.state.location}
+              style={styles.picker}
+              onValueChange={(itemValue) => this.setState({ location: itemValue })}
+            >
+              <Picker.Item label="None" value="none" />
+              <Picker.Item label="LRC" value="LRC" />
+              <Picker.Item label="CRC" value="CRC" />
+              <Picker.Item label="HKTC" value="HKTC" />
+            </Picker>
+
+            {/* Input Fields */}
+            <Text style={styles.modalText}>Win BH</Text>
+            <TextInput
+              placeholder="WinnerBH"
+              value={this.state.winnerBH}
+              onChangeText={(text) => { this.setState({ winnerBH: text})}}
+              style={styles.input}
+            />
+
+            <Text style={styles.modalText}>Win FH</Text>
+            <TextInput
+              placeholder="WinnerFH"
+              value={this.state.winnerFH}
+              onChangeText={ (text) => { this.setState({ winnerFH: text})}}
+              style={styles.input}
+            />
+
+            <Text style={styles.modalText}>Win Score</Text>
+            <TextInput
+              placeholder="Win Score"
+              value={this.state.winScore !== undefined ? this.state.winScore.toString() : ''}
+              onChangeText={(text) => this.setState({ winScore: text })}
+              style={styles.input}
+              keyboardType="numeric"
+            />
+
+            <Text style={styles.modalText}>Lose Score</Text>
+            <TextInput
+              placeholder="Lose Score"
+              value={this.state.loseScore !== undefined ? this.state.loseScore.toString() : ''}
+              onChangeText={(text) => this.setState({ loseScore: text })}
+              style={styles.input}
+              keyboardType="numeric"
+            />
+
+            <Text style={styles.modalText}>Loss BH</Text>
+            <TextInput
+              placeholder="Loser BH"
+              value={this.state.loserBH}
+              onChangeText={(text) => this.setState({ loserBH: text })}
+              style={styles.input}
+            />
+
+            <Text style={styles.modalText}>Loss FH</Text>
+            <TextInput
+              placeholder="Loser FH"
+              value={this.state.loserFH}
+              onChangeText={(text) => this.setState({ loserFH: text })}
+              style={styles.input}
+            />
+            
+            <Pressable 
+              style={styles.buttonContainer}
+              onPress={handleSubmit} >
+              <Text style={styles.buttonText}> Submit</Text>
+            </Pressable>
+
+          </View>
+        </Modal>
+    );
+  }
 
 
   renderEmptyDate = () => {
@@ -211,7 +399,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginRight: 10,
-    marginTop: 17
+    marginTop: 17,
   },
   emptyDate: {
     height: 15,
@@ -227,4 +415,47 @@ const styles = StyleSheet.create({
   dayItem: {
     marginLeft: 76
   },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 35,
+    alignItems: 'flex-start',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    color: 'black'
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 15,
+    width: '100%',
+    paddingLeft: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: '100%',
+    backgroundColor: '#87CEFA'
+  },
+  picker: {
+    height: 50,
+    width: '100%',
+    marginBottom: 15,
+  },
+  buttonText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+  }
 });
