@@ -1,21 +1,14 @@
 import React from 'react';
 import { Pressable, View, StyleSheet, Text } from 'react-native';
 import { Link } from 'expo-router';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
       // Define what happens when the button is pressed
       // 1. Pop up box for inputing new gameScore 
       // 2. input type checking 
       // 3. trigger new add_gameScore fetch call 
       // 4. retrieve successful alert messages or media 
 
-// const handleButtonPress = () => {
-//     const colorScheme = useColorScheme()
-
-// };
-
 const FloatingButton = () => {
+    
     return (
         <Link href="/add_gameScore_screen" asChild>
             <Pressable style={styles.button} >

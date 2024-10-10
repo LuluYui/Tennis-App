@@ -6,10 +6,10 @@ import ADDGameScoreScreen from '@/components/Calendar/test/_agenda_action/add_ga
 import { router } from 'expo-router';
 
 export default function add_gameScore() {
-  
+
   return (
     <View style={styles.separator} darkColor={appColors.viewBackground.dark}>
-        <ADDGameScoreScreen onClose={()=> { router.back() }} /> 
+        <ADDGameScoreScreen onClose={()=> { router.back(); }} /> 
     </View>
   );
 }

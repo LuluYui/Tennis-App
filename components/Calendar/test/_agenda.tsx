@@ -31,7 +31,7 @@ interface State {
   refreshKey: number,
 }
 
-interface AgendaEntryGameScore extends AgendaEntry {
+export interface AgendaEntryGameScore extends AgendaEntry {
   location: string, 
   winnerBH: string,
   winnerFH: string,
@@ -63,6 +63,13 @@ export default class AgendaScreen extends Component<State> {
     gameID: '',
     refreshKey: 0,
   };
+  
+  refreshAgenda() {
+    const num = this.state.refreshKey;
+    this.setState({
+      refreshKey : num+1,
+    })
+  }
 
   render() {
 
@@ -131,7 +138,8 @@ export default class AgendaScreen extends Component<State> {
                   WinnerFH : "Cadol"
           */
           let date = ""; 
-          typeof result[key].Date === "string" ? date = result[key].Date.split('T')[0] : date = new Date(result[key].Date._seconds * 1000).toISOString().split('T')[0];
+
+          typeof result[key].Date === "string" ? date = result[key].Date.split('T')[0] : date = this.toLocaleISOString(new Date(result[key].Date._seconds * 1000)).split('T')[0];
           const location = result[key].Location;
           const loseScore = result[key].LoseScore;
           const loserBH = result[key].LoserBH;
@@ -241,10 +249,10 @@ export default class AgendaScreen extends Component<State> {
       this.setState({
         editFormVisible: false, 
       });
-      
       // add the content to cloud 
+      // time string is not stored correctly, need thorough study on firestore date storage behaviours 
       const data = {
-         date : this.toLocaleISOString(this.state.date),
+         date : this.state.date,
          gameID: this.state.gameID, 
          location: this.state.location,
          loseScore: this.state.loseScore, 
@@ -406,6 +414,8 @@ export default class AgendaScreen extends Component<State> {
     return date.toISOString().split('T')[0];
   }
 
+
+  // Custom formattor to output the correct locale date
   toLocaleISOString = (date: Date) => {
     // Get the locale date string
     const localeDate = date.toLocaleDateString('en-CA', {
@@ -415,13 +425,14 @@ export default class AgendaScreen extends Component<State> {
     });
   
     // Get the locale time string
-    const localeTime = date.toLocaleTimeString('en-US', {
+    const localeTime = date.toLocaleTimeString('en-HK', {
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit',
+      second: 'numeric',
+      fractionalSecondDigits: 2,
       hour12: false, // Set to true for 12-hour format
     });
-  
+
     // Format the date and time to create an ISO-like string
     return `${localeDate.replace(/\//g, '-')}T${localeTime}`;
   };
