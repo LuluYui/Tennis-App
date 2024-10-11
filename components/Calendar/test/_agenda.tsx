@@ -10,6 +10,7 @@ import FloatingButton from './_floatingButtonComponent';
 import Colors from '@/constants/Colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
+import { create } from 'zustand';
 
 interface State {
   items?: AgendaSchedule;
@@ -28,7 +29,7 @@ interface State {
   loserFH: string
   date: Date,
   gameID: string,
-  refreshKey: number,
+  refreshKey: number
 }
 
 export interface AgendaEntryGameScore extends AgendaEntry {
@@ -42,6 +43,19 @@ export interface AgendaEntryGameScore extends AgendaEntry {
   date: Date,
   gameID: string,
 }
+
+interface BearState {
+  bears: number
+  increase: () => void
+}
+
+const useBearStore = create<BearState>()((set) => ({
+  bears: 0,
+  increase: () => set((state) => ({ bears: state.bears + 1 })),
+  decrease: () => set((state) => ({ bears: state.bears - 1 })),
+}))
+
+export { useBearStore };
 
 export default class AgendaScreen extends Component<State> {
   state: State = {
@@ -61,18 +75,25 @@ export default class AgendaScreen extends Component<State> {
     loserBH: '',
     loserFH: '',
     gameID: '',
-    refreshKey: 0,
+    refreshKey: useBearStore.getState().bears,
   };
+  unsubscribe = ()=>{};
+
+  componentDidMount(): void {
+    this.unsubscribe = useBearStore.subscribe(
+      ( state )  => this.setState({ refreshKey: state.bears }),
+    );
+  }
   
-  refreshAgenda() {
-    const num = this.state.refreshKey;
-    this.setState({
-      refreshKey : num+1,
-    })
+  componentWillUnmount(): void {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
   }
 
   render() {
 
+    console.log('updating ', this.state.refreshKey)
     return (
       <>
         <Agenda
@@ -201,6 +222,12 @@ export default class AgendaScreen extends Component<State> {
     return <View style={styles.dayItem} />;
   };
 
+  // increase = () => {
+  //   useBearStore.getState().increase();
+  //   // const bear = useBearStore.getState().bears;
+  //   // console.log(bear)
+  // }
+
   renderItem = (reservation: AgendaEntryGameScore, isFirst: boolean) => {
     const fontSize = isFirst ? 21 : 18;
     const color = isFirst ? 'black' : '#43515f';
@@ -249,6 +276,7 @@ export default class AgendaScreen extends Component<State> {
       this.setState({
         editFormVisible: false, 
       });
+      
       // add the content to cloud 
       // time string is not stored correctly, need thorough study on firestore date storage behaviours 
       const data = {
@@ -265,11 +293,14 @@ export default class AgendaScreen extends Component<State> {
 
       edit_score(data)
         .then( (result: any) => {
-          const num = this.state.refreshKey;
-          this.setState({ refreshKey: num + 1})
+          // const num = this.state.refreshKey;
+          // this.setState({ refreshKey: num + 1})
+          this.increase();
         })
         .catch(e => console.log(e))
     };
+
+    
 
     const handleDateChange = (event: any, selectedDate: Date | undefined) => {
       const currentDate = selectedDate || this.state.date;
@@ -417,6 +448,7 @@ export default class AgendaScreen extends Component<State> {
 
   // Custom formattor to output the correct locale date
   toLocaleISOString = (date: Date) => {
+    // [LIMITATIONS] : Time  cannot be set, no decimal places, storage has string instead of timestamp
     // Get the locale date string
     const localeDate = date.toLocaleDateString('en-CA', {
       year: 'numeric',
@@ -505,3 +537,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   }
 });
+

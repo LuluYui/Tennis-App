@@ -9,6 +9,7 @@ import { useColorScheme } from "react-native";
 import { appColors } from "@/constants/Colors";
 import { app, auth, db } from '@/firebase/authentication'
 import { add_gameScore } from '@/components/callfunction';
+import { useBearStore } from '../_agenda';
 
 export default function ADDGameScoreScreen({visible, onClose}: any) {
   const isDark = useColorScheme();
@@ -25,6 +26,7 @@ export default function ADDGameScoreScreen({visible, onClose}: any) {
   const [loseScore, setLoseScore] = useState('2');
   const [loserBH, setLoserBH] = useState('Man');
   const [loserFH, setLoserFH] = useState('Lolo');
+  const { increase } = useBearStore();
 
   const handleSubmit = () => {
     // Validate and process the data
@@ -42,15 +44,16 @@ export default function ADDGameScoreScreen({visible, onClose}: any) {
     try {
       add_gameScore(data)
         .then( (result: any) => {
-          console.log('successful received data')
           console.log(result.message);
           console.log(result.data);
+        // refresh Agenda Page with bears item
+        increase();
         })
     } catch(e) {
       console.log(e)
     }
-    
     onClose(); // Close the modal after submission
+
   };
 
   const handleDateChange = (event: any, selectedDate: any) => {
