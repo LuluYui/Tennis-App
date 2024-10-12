@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {
   CartesianChart,
+  CartesianChartRenderArg,
   type ChartBounds,
   type PointsArray,
   useAreaPath,
@@ -40,6 +41,8 @@ import { useColorScheme } from "react-native";
 import { callStats } from "../callfunction";
 import { InfoCard } from "./InfoCard";
 import firebase_init from "@/firebase/firebase_init";
+import { Picker } from "@react-native-picker/picker";
+import { NumericalFields } from "victory-native/dist/types";
 
 interface DualStat {
   [key: string]: any;
@@ -47,7 +50,7 @@ interface DualStat {
 
 const initChartPressState = { x: 0, y: { high: 0 } } as const;
 
-export default function TestChart(props: { segment: string }) {
+export default function TestChart() {
   const isDark = useDarkMode();
   const colorPrefix = isDark ? "dark" : "light";
   const font = useFont(inter, 12);
@@ -66,6 +69,7 @@ export default function TestChart(props: { segment: string }) {
     setWinRate:  40 + 30 * Math.random(),
     setLoseRate: 40 + 30 * Math.random(),
   })));
+  const [ kValue, setKValue] = useState("high")
   const description = `This chart shows the players WinRate in sequence ` + 
   `You may put your fingers on the chart to see more details about the players statistics`
 
@@ -172,13 +176,20 @@ export default function TestChart(props: { segment: string }) {
       : appColors.error[colorPrefix];
   });
 
+  // high:         values.gameLoseRate,
+  // gameWinRate:  values.gameWinRate,
+  // gameLoseRate: values.gameLoseRate,
+  // setWinRate:   values.setWinRate,
+  // setLoseRate:  values.setLoseRate,
+
   return (
     <SafeAreaView style={styles.scrollView}>
       <View style={{ flex: 2, maxHeight: 500, marginBottom: 10}}>
         <CartesianChart
           data={DATA}
           xKey="players"
-          yKeys={["high"]}
+          // specify key in DATA for showing in yKeys
+          yKeys={["high", "gameWinRate", "gameLoseRate", "setWinRate", "setLoseRate"]}
           chartPressState={[firstTouch, secondTouch]}
           axisOptions={{
             font,
@@ -226,11 +237,12 @@ export default function TestChart(props: { segment: string }) {
             </>
           )}
         >
+
           {({ chartBounds, points }) => (
             <>
               <StockArea
                 colorPrefix={colorPrefix}
-                points={points.high}
+                points={points[kValue]}
                 isWindowActive={isFirstPressActive && isSecondPressActive}
                 isDeltaPositive={isDeltaPositive}
                 startX={firstTouch.x.position}
@@ -239,6 +251,7 @@ export default function TestChart(props: { segment: string }) {
               />
             </>
           )}
+
         </CartesianChart>
       </View>
       <ScrollView
@@ -267,6 +280,19 @@ export default function TestChart(props: { segment: string }) {
           </>
         </View>
           <InfoCard style={{ marginBottom: 16 }}>{description}</InfoCard>
+            <Picker
+              selectedValue={kValue}
+              style={styles.picker}
+              onValueChange={(itemValue) => setKValue(itemValue)}
+            >
+{/* ["high", "gameWinRate", "gameLoseRate", "setWinRate", "setLoseRate"] */}
+              <Picker.Item label="high" value="high" />
+              <Picker.Item label="gameWinRate" value="gameWinRate" />
+              <Picker.Item label="gameLoseRate" value="gameLoseRate" />
+              <Picker.Item label="setWinRate" value="setWinRate" />
+              <Picker.Item label="setLoseRate" value="setLoseRate" />
+            </Picker>
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -471,6 +497,7 @@ const formatName = (value: number) => {
     const playerFH = nameArray[1];
     return `BH: ${playerBH} FH: ${playerFH}`
 };
+
 const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: appColors.viewBackground.light,
@@ -491,5 +518,10 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     alignItems: "flex-start",
     justifyContent: "flex-start",
+  },
+  picker: {
+    height: 50,
+    width: '100%',
+    marginBottom: 15,
   },
 });

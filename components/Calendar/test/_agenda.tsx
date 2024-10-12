@@ -93,7 +93,6 @@ export default class AgendaScreen extends Component<State> {
 
   render() {
 
-    console.log('updating ', this.state.refreshKey)
     return (
       <>
         <Agenda
@@ -222,11 +221,9 @@ export default class AgendaScreen extends Component<State> {
     return <View style={styles.dayItem} />;
   };
 
-  // increase = () => {
-  //   useBearStore.getState().increase();
-  //   // const bear = useBearStore.getState().bears;
-  //   // console.log(bear)
-  // }
+  increase = () => {
+    useBearStore.getState().increase();
+  }
 
   renderItem = (reservation: AgendaEntryGameScore, isFirst: boolean) => {
     const fontSize = isFirst ? 21 : 18;
@@ -299,8 +296,6 @@ export default class AgendaScreen extends Component<State> {
         })
         .catch(e => console.log(e))
     };
-
-    
 
     const handleDateChange = (event: any, selectedDate: Date | undefined) => {
       const currentDate = selectedDate || this.state.date;
