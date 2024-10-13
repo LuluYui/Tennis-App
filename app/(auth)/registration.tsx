@@ -35,6 +35,25 @@ export default function Registration() {
         <LoginScreen
           logoImageSource={require('@/assets/images/logo-example.png')}
           onLoginPress={() => {
+
+            if (process.env.NODE_ENV === "development") {
+            (password === repassword) ? 
+                          createUserWithEmailAndPassword(auth, email, password)
+                            .then((userCredentials) => {
+                              const user = userCredentials.user;
+                              popSuggestions(`sucessfully registered user with email : ${user.email}`);
+                              setTimeout(() => {
+                                router.back()
+                              }, 3000)
+                            })
+                            .catch((error) => {
+                              const errorCode = error.code;
+                              const errorMessage = error.message;
+                              console.log(errorCode);
+                              console.log(errorMessage);
+                            })
+                 : popSuggestions('Confirm Password is incorrect') 
+            } else {
             (password === repassword) ? 
                 validatePassword(auth, password).then((result) => {
                   result.isValid ? 
@@ -54,6 +73,8 @@ export default function Registration() {
                             })
                             : popSuggestions('Password is too long or too short')
                 }) : popSuggestions('Confirm Password is incorrect') 
+
+            }
           }}
           onSignupPress={() => {}}
           onEmailChange={setEmail}
