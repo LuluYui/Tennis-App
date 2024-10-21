@@ -1,7 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
 import { Platform, Pressable, StyleSheet } from 'react-native';
-
-import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import { useSession } from '@/components/Authentication/ctx';
 import { router } from 'expo-router';
@@ -11,6 +8,8 @@ export default function ModalScreen() {
 
   return (
     <View style={styles.container}>
+      
+      {/* handle the messageing options */}
       <Pressable
         onPress={async () => {
           try {

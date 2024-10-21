@@ -158,5 +158,13 @@ const styles = StyleSheet.create({
     borderWidth: 1, // Border width
     borderRadius: 5, // Rounded corners
     height: 50, 
+  },
+  dateTimePicker: {
+    $dark: {
+      backgroundColor: appColors.viewBackground.dark,
+      color: '#ffffff', // White text for picker items
+    },
+    backgroundColor: appColors.viewBackground.dark,
+    color: '#ffffff', // White text for picker items
   }
 });

@@ -45,3 +45,7 @@ expo-env.d.ts
 
 # lock file
 package-lock.json
+
+# google.service.json
+test-f3464-firebase-*.json
+google-services.json

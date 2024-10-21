@@ -12,3 +12,10 @@ Finish project ASAP
 2. handle re-rendering of agenda table 
 3. add the notification demo, in the modal page ? Perhaps take the add_game_score screen out to get the back button back 
 4. create a presentation or demo video for Kelvin and Chi to take a look, get to know Wilson a lil more. 
+
+21/10/2024
+1. Add/Edit functions need validators for inputs
+2. Fix the Add page dark mode
+3. Add the Pie Chart. 
+4. Fix the notification functions, add in some features of notification demo showcases 
+ 
