@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import {Alert, Button, TextInput, Modal, Pressable, StyleSheet, TouchableOpacity, Appearance} from 'react-native';
-import { Text, View } from '@/components/Themed';
+import {Alert, Button, TextInput, Modal, Pressable, StyleSheet, TouchableOpacity, Appearance} from 'react-native'; import { Text, View } from '@/components/Themed';
 // import { Agenda, DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
 import { DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
 import { Agenda } from "@/components/Calendar/test/CalendarTheme";
 import testIDs from '../testIDs';
 import {  callScores, edit_score } from '@/components/callfunction';
 import FloatingButton from './_floatingButtonComponent';
-import Colors from '@/constants/Colors';
+import Colors, { appColors } from '@/constants/Colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import { create } from 'zustand';
@@ -29,7 +28,8 @@ interface State {
   loserFH: string
   date: Date,
   gameID: string,
-  refreshKey: number
+  refreshKey: number,
+  isDarkMode: string | null | undefined
 }
 
 export interface AgendaEntryGameScore extends AgendaEntry {
@@ -76,19 +76,26 @@ export default class AgendaScreen extends Component<State> {
     loserFH: '',
     gameID: '',
     refreshKey: useBearStore.getState().bears,
+    isDarkMode: Appearance.getColorScheme() ?? 'light'
   };
   unsubscribe = ()=>{};
+  subscription: any;
 
   componentDidMount(): void {
     this.unsubscribe = useBearStore.subscribe(
       ( state )  => this.setState({ refreshKey: state.bears }),
     );
+      // Add listener for appearance changes
+    this.subscription = Appearance.addChangeListener(({ colorScheme }) => {
+      this.setState({ isDarkMode: colorScheme === 'dark' });
+    });
   }
   
   componentWillUnmount(): void {
     if (this.unsubscribe) {
       this.unsubscribe();
     }
+    this.subscription.remove();
   }
 
   render() {
@@ -104,8 +111,8 @@ export default class AgendaScreen extends Component<State> {
           renderEmptyDate={this.renderEmptyDate}
           rowHasChanged={this.rowHasChanged}
           showClosingKnob={true}
-          futureScrollRange={50}
-          pastScrollRange={50}
+          futureScrollRange={12}
+          pastScrollRange={500}
           overScrollMode='always'
           // initialDate='2024-05-06'
           selected={'2023-05-05'}
@@ -122,7 +129,7 @@ export default class AgendaScreen extends Component<State> {
           // monthFormat={'yyyy'}
           // theme={{reservationsBackgroundColor: appColors.viewBackground.dark}}
           renderDay={this.renderDay}
-          // hideExtraDays={false}
+          hideExtraDays={false}
           // showOnlySelectedDayItems
           // reservationsKeyExtractor={this.reservationsKeyExtractor}
           hideKnob={false}
@@ -142,6 +149,18 @@ export default class AgendaScreen extends Component<State> {
       // my programme
       let tmp: any = {};
       let scoreItems: AgendaSchedule = {}
+
+      // Generate dates for the past year and the next year
+      const startDate = new Date(day.timestamp - 183 * 24 * 60 * 60 * 1000); // 1 year ago
+      const endDate = new Date(day.timestamp + 1 * 24 * 60 * 60 * 1000); // 1 year from now
+
+      for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
+        const strTime = this.timeToString(date.getTime());
+        if (!tmp[strTime]) {
+          tmp[strTime] = [];
+        }
+      }
+
       callScore.then((result) => {
         if (result) {
         Object.keys(result).forEach(key => {
@@ -190,13 +209,14 @@ export default class AgendaScreen extends Component<State> {
         })
 
       // fill-in empty date items
-      for (let i = -15; i < 85; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = this.timeToString(time);
-        if (!tmp[strTime]) {
-          tmp[strTime] = [];
-        }
-      }
+      // for (let i = -30; i < 85; i++) {
+      //   const time = day.timestamp + i * 24 * 60 * 60 * 1000;
+      //   const strTime = this.timeToString(time);
+      //   if (!tmp[strTime]) {
+      //     tmp[strTime] = [];
+      //     console.log('set date', strTime)
+      //   }
+      // }
 
       // O(n)
       Object.keys(tmp).forEach(key => {
@@ -290,8 +310,6 @@ export default class AgendaScreen extends Component<State> {
 
       edit_score(data)
         .then( (result: any) => {
-          // const num = this.state.refreshKey;
-          // this.setState({ refreshKey: num + 1})
           this.increase();
         })
         .catch(e => console.log(e))
@@ -299,10 +317,6 @@ export default class AgendaScreen extends Component<State> {
 
     const handleDateChange = (event: any, selectedDate: Date | undefined) => {
       const currentDate = selectedDate || this.state.date;
-      // const localDate = new Date(currentDate.getTime() - currentDate.getTimezoneOffset() * 60000);
-      // console.log(currentDate.getTimezoneOffset())
-      // console.log(currentDate)
-
       this.setState({ date: currentDate, datePickerVisible: false });
     }
 
@@ -313,8 +327,8 @@ export default class AgendaScreen extends Component<State> {
           visible={this.state.editFormVisible}
           onRequestClose={() => this.setState({editFormVisible: false })}
         >
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>Edit Tennis Scores</Text>
+        <View style={this.state.isDarkMode ? styles.modalViewDark: styles.modalViewLight}>
+          <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Edit Tennis Scores</Text>
            {/* Date Picker */}
            {/* <Button title="Select Date" onPress={() => this.setState({ datePickerVisible: true })} /> */}
            <Pressable 
@@ -327,7 +341,7 @@ export default class AgendaScreen extends Component<State> {
            >
             <Text style={styles.buttonText}>Selected Date </Text>
            </Pressable >
-            <Text style={styles.modalText}> {this.state.date.toLocaleString().split('T')[0]}</Text>
+            <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}> {this.state.date.toLocaleString().split('T')[0]}</Text>
             {this.state.datePickerVisible && (
               <DateTimePicker
                 value={this.state.date}
@@ -339,10 +353,10 @@ export default class AgendaScreen extends Component<State> {
             )}
 
             {/* Location Dropdown */}
-            <Text style={styles.modalText}>Location:</Text>
+            <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Location:</Text>
             <Picker
               selectedValue={this.state.location}
-              style={styles.picker}
+              style={this.state.isDarkMode ? styles.pickerDark : styles.pickerLight}
               onValueChange={(itemValue) => this.setState({ location: itemValue })}
             >
               <Picker.Item label="None" value="none" />
@@ -352,54 +366,54 @@ export default class AgendaScreen extends Component<State> {
             </Picker>
 
             {/* Input Fields */}
-            <Text style={styles.modalText}>Win BH</Text>
+            <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Win BH</Text>
             <TextInput
               placeholder="WinnerBH"
               value={this.state.winnerBH}
               onChangeText={(text) => { this.setState({ winnerBH: text})}}
-              style={styles.input}
+              style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
             />
 
-            <Text style={styles.modalText}>Win FH</Text>
+            <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Win FH</Text>
             <TextInput
               placeholder="WinnerFH"
               value={this.state.winnerFH}
               onChangeText={ (text) => { this.setState({ winnerFH: text})}}
-              style={styles.input}
+              style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
             />
 
-            <Text style={styles.modalText}>Win Score</Text>
+            <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Win Score</Text>
             <TextInput
               placeholder="Win Score"
               value={this.state.winScore !== undefined ? this.state.winScore.toString() : ''}
               onChangeText={(text) => this.setState({ winScore: text })}
-              style={styles.input}
+              style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
               keyboardType="numeric"
             />
 
-            <Text style={styles.modalText}>Lose Score</Text>
+            <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Lose Score</Text>
             <TextInput
               placeholder="Lose Score"
               value={this.state.loseScore !== undefined ? this.state.loseScore.toString() : ''}
               onChangeText={(text) => this.setState({ loseScore: text })}
-              style={styles.input}
+              style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
               keyboardType="numeric"
             />
 
-            <Text style={styles.modalText}>Loss BH</Text>
+            <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Loss BH</Text>
             <TextInput
               placeholder="Loser BH"
               value={this.state.loserBH}
               onChangeText={(text) => this.setState({ loserBH: text })}
-              style={styles.input}
+              style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
             />
 
-            <Text style={styles.modalText}>Loss FH</Text>
+            <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Loss FH</Text>
             <TextInput
               placeholder="Loser FH"
               value={this.state.loserFH}
               onChangeText={(text) => this.setState({ loserFH: text })}
-              style={styles.input}
+              style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
             />
             
             <Pressable 
@@ -459,8 +473,7 @@ export default class AgendaScreen extends Component<State> {
       fractionalSecondDigits: 2,
       hour12: false, // Set to true for 12-hour format
     });
-
-    // Format the date and time to create an ISO-like string
+// Format the date and time to create an ISO-like string
     return `${localeDate.replace(/\//g, '-')}T${localeTime}`;
   };
 }
@@ -488,7 +501,7 @@ const styles = StyleSheet.create({
   dayItem: {
     marginLeft: 76
   },
-  modalView: {
+  modalViewLight: {
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 10,
@@ -503,12 +516,32 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  modalText: {
+  modalViewDark: {
+    margin: 20,
+    backgroundColor: appColors.viewBackground.dark,
+    borderRadius: 10,
+    padding: 35,
+    alignItems: 'flex-start',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalTextLight: {
     marginBottom: 15,
     textAlign: 'center',
     color: 'black'
   },
-  input: {
+  modalTextDark: {
+    marginBottom: 15,
+    textAlign: 'center',
+    color: 'white'
+  },
+  inputLight: {
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
@@ -516,16 +549,31 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingLeft: 10,
   },
+  inputDark: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 15,
+    width: '100%',
+    paddingLeft: 10,
+    color: 'white'
+  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     width: '100%',
     backgroundColor: '#87CEFA'
   },
-  picker: {
+  pickerLight: {
     height: 50,
     width: '100%',
     marginBottom: 15,
+  },
+  pickerDark: {
+    height: 50,
+    width: '100%',
+    marginBottom: 15,
+    color: 'white'
   },
   buttonText: {
     fontSize: 30,

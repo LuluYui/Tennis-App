@@ -1,5 +1,6 @@
 import { httpsCallable } from "firebase/functions";
 import { auth, functions } from "@/firebase/authentication"
+import { Alert } from "react-native";
 
 export function callStats() : Promise<any> {
     const user = auth.currentUser;
@@ -49,6 +50,8 @@ export function edit_score(data: any) : Promise<any> {
           // Read result of the Cloud Function.
           /** @type {any} */
           const data: any = result.data;
+          console.log('success')
+          console.log(result)
           return data
         })
         .catch((error) => {
@@ -56,7 +59,9 @@ export function edit_score(data: any) : Promise<any> {
             const code = error.code;
             const message = error.message;
             const details = error.details;
+
             // ...
+            Alert.alert(message)
           });
 }
 
