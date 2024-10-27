@@ -10,14 +10,13 @@ import Colors, { appColors } from '@/constants/Colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import { create } from 'zustand';
+import NotificationTest from '@/app/notification_test';
+import { Link, router } from 'expo-router';
 
 interface State {
   items?: AgendaSchedule;
   data?: AgendaSchedule;
   editFormVisible: boolean;
-  player1Score: string; 
-  player2Score: string; 
-  selectedScore: any;
   datePickerVisible: boolean,
   location: string, 
   winnerBH: string,
@@ -44,13 +43,20 @@ export interface AgendaEntryGameScore extends AgendaEntry {
   gameID: string,
 }
 
+
 interface BearState {
   bears: number
+  bearState: any
+  setBearState: (state: any)=> void
   increase: () => void
 }
 
 const useBearStore = create<BearState>()((set) => ({
   bears: 0,
+  bearState: {}, 
+  setBearState: (gameBoard: any) => {
+    set({bearState: gameBoard})
+  },
   increase: () => set((state) => ({ bears: state.bears + 1 })),
   decrease: () => set((state) => ({ bears: state.bears - 1 })),
 }))
@@ -62,9 +68,6 @@ export default class AgendaScreen extends Component<State> {
     items: undefined,
     data: undefined,
     editFormVisible: false,
-    player1Score: '', 
-    player2Score: '', 
-    selectedScore: {},
     datePickerVisible: false,
     date: new Date(),
     location: 'none',
@@ -111,8 +114,8 @@ export default class AgendaScreen extends Component<State> {
           renderEmptyDate={this.renderEmptyDate}
           rowHasChanged={this.rowHasChanged}
           showClosingKnob={true}
-          futureScrollRange={12}
-          pastScrollRange={500}
+          futureScrollRange={50}
+          pastScrollRange={50}
           overScrollMode='always'
           // initialDate='2024-05-06'
           selected={'2023-05-05'}
@@ -151,8 +154,8 @@ export default class AgendaScreen extends Component<State> {
       let scoreItems: AgendaSchedule = {}
 
       // Generate dates for the past year and the next year
-      const startDate = new Date(day.timestamp - 183 * 24 * 60 * 60 * 1000); // 1 year ago
-      const endDate = new Date(day.timestamp + 1 * 24 * 60 * 60 * 1000); // 1 year from now
+      const startDate = new Date(day.timestamp - 50 * 24 * 60 * 60 * 1000); // 1 year ago
+      const endDate = new Date(day.timestamp + 50 * 24 * 60 * 60 * 1000); // 1 year from now
 
       for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
         const strTime = this.timeToString(date.getTime());
@@ -208,16 +211,6 @@ export default class AgendaScreen extends Component<State> {
           })
         })
 
-      // fill-in empty date items
-      // for (let i = -30; i < 85; i++) {
-      //   const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-      //   const strTime = this.timeToString(time);
-      //   if (!tmp[strTime]) {
-      //     tmp[strTime] = [];
-      //     console.log('set date', strTime)
-      //   }
-      // }
-
       // O(n)
       Object.keys(tmp).forEach(key => {
         scoreItems[key] = tmp[key];
@@ -243,6 +236,11 @@ export default class AgendaScreen extends Component<State> {
 
   increase = () => {
     useBearStore.getState().increase();
+  }
+
+  updateBear = () => {
+    const { items, ...otherState } = this.state;
+    useBearStore.getState().setBearState(otherState);
   }
 
   renderItem = (reservation: AgendaEntryGameScore, isFirst: boolean) => {
@@ -318,6 +316,24 @@ export default class AgendaScreen extends Component<State> {
     const handleDateChange = (event: any, selectedDate: Date | undefined) => {
       const currentDate = selectedDate || this.state.date;
       this.setState({ date: currentDate, datePickerVisible: false });
+    }
+    
+    interface RouterParams {
+      [key: string]: any;
+    }
+
+    const handleNotification = () => {
+      this.updateBear();
+      // turn off the form visibility 
+      this.setState({
+        editFormVisible: false, 
+      });
+      // router.setParams({props: otherState} as RouterParams);
+      router.push({
+        pathname: '/notification_test',
+        // params: {props: otherState} as RouterParams
+      })
+
     }
 
     return (
@@ -420,6 +436,13 @@ export default class AgendaScreen extends Component<State> {
               style={styles.buttonContainer}
               onPress={handleSubmit} >
               <Text style={styles.buttonText}> Submit</Text>
+            </Pressable>
+
+            {/* test send notification */}
+            <Pressable 
+              style={styles.buttonContainer}
+              onPress={handleNotification} >
+              <Text style={styles.buttonText}> Handle Notification</Text>
             </Pressable>
 
           </View>
@@ -562,7 +585,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     width: '100%',
-    backgroundColor: '#87CEFA'
+    backgroundColor: '#87CEFA',
+    marginBottom: 10
   },
   pickerLight: {
     height: 50,
