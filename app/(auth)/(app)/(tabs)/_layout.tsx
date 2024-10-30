@@ -2,6 +2,7 @@ import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, router, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -32,13 +33,13 @@ export default function TabLayout() {
         name="index"
         options={{
           title: TAB_ONE_TITLE,
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="calendar" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
-                    name="info-circle"
+                    name="sign-out"
                     size={25}
                     color={Colors[colorScheme ?? 'light'].text}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
@@ -53,15 +54,14 @@ export default function TabLayout() {
         name="statistics"
         options={{
           title: TAB_TWO_TITLE,
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="line-chart" color={color} />,
           headerRight: () => (
             <Link href="/notification_test" asChild>
               <Pressable>
                 {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
+                  <MaterialIcons name="notification-add" 
+                    size={25} 
+                    color={Colors[colorScheme ?? 'light'].text} 
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
@@ -70,6 +70,7 @@ export default function TabLayout() {
           ),
         }}
       />
+      {/* How to fix the add_gameScore thingy */}
       <Tabs.Screen
         name="(screens)/add_gameScore_screen"
         options={{

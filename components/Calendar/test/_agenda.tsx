@@ -336,6 +336,12 @@ export default class AgendaScreen extends Component<State> {
 
     }
 
+    const handleBack = () => {
+      this.setState({
+        editFormVisible: false
+      })
+    }
+
     return (
         <Modal
           animationType="slide"
@@ -344,19 +350,22 @@ export default class AgendaScreen extends Component<State> {
           onRequestClose={() => this.setState({editFormVisible: false })}
         >
         <View style={this.state.isDarkMode ? styles.modalViewDark: styles.modalViewLight}>
-          <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Edit Tennis Scores</Text>
-           {/* Date Picker */}
-           {/* <Button title="Select Date" onPress={() => this.setState({ datePickerVisible: true })} /> */}
-           <Pressable 
-                style={styles.buttonContainer} 
-                onPress={ () => {
-                  this.setState({
-                    datePickerVisible: true,
-                  })
-                }}
-           >
-            <Text style={styles.buttonText}>Selected Date </Text>
-           </Pressable >
+
+          <View style={styles.row}>
+            {/* Date Picker */}
+            <Pressable 
+                  style={styles.buttonContainer} 
+                  onPress={ () => {
+                    this.setState({
+                      datePickerVisible: true,
+                    })
+                  }}
+            >
+              <Text style={styles.buttonText}>Selected Date </Text>
+            </Pressable >
+
+          </View>
+
             <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}> {this.state.date.toLocaleString().split('T')[0]}</Text>
             {this.state.datePickerVisible && (
               <DateTimePicker
@@ -368,8 +377,9 @@ export default class AgendaScreen extends Component<State> {
               />
             )}
 
+          <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Location:</Text>
+          <View style={styles.row}>
             {/* Location Dropdown */}
-            <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Location:</Text>
             <Picker
               selectedValue={this.state.location}
               style={this.state.isDarkMode ? styles.pickerDark : styles.pickerLight}
@@ -380,70 +390,91 @@ export default class AgendaScreen extends Component<State> {
               <Picker.Item label="CRC" value="CRC" />
               <Picker.Item label="HKTC" value="HKTC" />
             </Picker>
+          </View>
 
-            {/* Input Fields */}
-            <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Win BH</Text>
-            <TextInput
-              placeholder="WinnerBH"
-              value={this.state.winnerBH}
-              onChangeText={(text) => { this.setState({ winnerBH: text})}}
-              style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
-            />
+            {/* Input Fields / Game Board Input Field */}
+          <View style={styles.row}>
 
-            <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Win FH</Text>
-            <TextInput
-              placeholder="WinnerFH"
-              value={this.state.winnerFH}
-              onChangeText={ (text) => { this.setState({ winnerFH: text})}}
-              style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
-            />
+            <View style={styles.column}> 
+              <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Win BH</Text>
+              <TextInput
+                placeholder="WinnerBH"
+                value={this.state.winnerBH}
+                onChangeText={(text) => { this.setState({ winnerBH: text})}}
+                style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
+              />
 
-            <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Win Score</Text>
-            <TextInput
-              placeholder="Win Score"
-              value={this.state.winScore !== undefined ? this.state.winScore.toString() : ''}
-              onChangeText={(text) => this.setState({ winScore: text })}
-              style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
-              keyboardType="numeric"
-            />
+              <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Win FH</Text>
+              <TextInput
+                placeholder="WinnerFH"
+                value={this.state.winnerFH}
+                onChangeText={ (text) => { this.setState({ winnerFH: text})}}
+                style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
+              />
+            </View>
 
-            <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Lose Score</Text>
-            <TextInput
-              placeholder="Lose Score"
-              value={this.state.loseScore !== undefined ? this.state.loseScore.toString() : ''}
-              onChangeText={(text) => this.setState({ loseScore: text })}
-              style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
-              keyboardType="numeric"
-            />
+            {/* Second Columne */}
+            <View style={styles.column}> 
+              <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Win Score</Text>
+              <TextInput
+                placeholder="Win Score"
+                value={this.state.winScore !== undefined ? this.state.winScore.toString() : ''}
+                onChangeText={(text) => this.setState({ winScore: text })}
+                style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
+                keyboardType="numeric"
+              />
 
-            <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Loss BH</Text>
-            <TextInput
-              placeholder="Loser BH"
-              value={this.state.loserBH}
-              onChangeText={(text) => this.setState({ loserBH: text })}
-              style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
-            />
+              <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Lose Score</Text>
+              <TextInput
+                placeholder="Lose Score"
+                value={this.state.loseScore !== undefined ? this.state.loseScore.toString() : ''}
+                onChangeText={(text) => this.setState({ loseScore: text })}
+                style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
+                keyboardType="numeric"
+              />
+            </View>
 
-            <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Loss FH</Text>
-            <TextInput
-              placeholder="Loser FH"
-              value={this.state.loserFH}
-              onChangeText={(text) => this.setState({ loserFH: text })}
-              style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
-            />
+            {/* Third Column */}
+            <View style={styles.column}> 
+              <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Loss BH</Text>
+              <TextInput
+                placeholder="Loser BH"
+                value={this.state.loserBH}
+                onChangeText={(text) => this.setState({ loserBH: text })}
+                style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
+              />
+
+              <Text style={this.state.isDarkMode ? styles.modalTextDark: styles.modalTextLight}>Loss FH</Text>
+              <TextInput
+                placeholder="Loser FH"
+                value={this.state.loserFH}
+                onChangeText={(text) => this.setState({ loserFH: text })}
+                style={this.state.isDarkMode ? styles.inputDark : styles.inputLight}
+              />
+            </View>
+
+          </View>
             
-            <Pressable 
-              style={styles.buttonContainer}
-              onPress={handleSubmit} >
-              <Text style={styles.buttonText}> Submit</Text>
-            </Pressable>
+              <Pressable 
+                style={styles.buttonContainer}
+                onPress={handleSubmit} >
+                <Text style={styles.buttonText}> Submit</Text>
+              </Pressable>
 
-            {/* test send notification */}
-            <Pressable 
-              style={styles.buttonContainer}
-              onPress={handleNotification} >
-              <Text style={styles.buttonText}> Handle Notification</Text>
-            </Pressable>
+              {/* test send notification */}
+              <Pressable 
+                style={styles.buttonContainer}
+                onPress={handleNotification} >
+                <Text style={styles.buttonText}> Handle Notification</Text>
+              </Pressable>
+
+              {/* test send notification */}
+              <Pressable 
+                style={styles.buttonContainer}
+                onPress={handleBack} >
+                <Text style={styles.buttonText}> Back </Text>
+              </Pressable>
+
 
           </View>
         </Modal>
@@ -526,6 +557,7 @@ const styles = StyleSheet.create({
   },
   modalViewLight: {
     margin: 20,
+    marginTop: 110,
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 35,
@@ -541,18 +573,20 @@ const styles = StyleSheet.create({
   },
   modalViewDark: {
     margin: 20,
+    marginTop: 110,
     backgroundColor: appColors.viewBackground.dark,
     borderRadius: 10,
     padding: 35,
     alignItems: 'flex-start',
     shadowColor: '#000',
     shadowOffset: {
-      width: 0,
+      width: 2,
       height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    color: 'white'
   },
   modalTextLight: {
     marginBottom: 15,
@@ -584,8 +618,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    width: '100%',
     backgroundColor: '#87CEFA',
+    width: "100%",
     marginBottom: 10
   },
   pickerLight: {
@@ -600,8 +634,20 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   buttonText: {
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: 'bold',
-  }
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: 'space-around',
+    backgroundColor: 'inherit',
+    width: "100%",
+  },
+  column: {
+    flexDirection: "column",
+    marginVertical: 15,
+    backgroundColor: 'inherit'
+  },
 });
+
 

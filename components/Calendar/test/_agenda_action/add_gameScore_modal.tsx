@@ -65,18 +65,21 @@ export default function ADDGameScoreScreen({visible, onClose}: any) {
   return (
     // <Modal visible={visible} animationType="slide">
       <View style={styles.container}>
-        <Text>Date :</Text>
-        <Button title="Show Date Picker" onPress={() => setShowDatePicker(true)} />
+        <View style={styles.row}>
+          <Text style={{ fontSize: 25}}>Date :</Text>
+          <Button title="Show Date Picker" onPress={() => setShowDatePicker(true)} />
+        </View>
+
+          <Text style={{ fontSize: 15, margin: 10}}> selected: {date.toLocaleString()}</Text>
+          {showDatePicker && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="default"
+              onChange={handleDateChange}
+            />
+          )}
         
-        <Text> selected: {date.toLocaleString()}</Text>
-        {showDatePicker && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display="default"
-            onChange={handleDateChange}
-          />
-        )}
 
         <Text>Location: </Text>
         <Picker
@@ -90,37 +93,54 @@ export default function ADDGameScoreScreen({visible, onClose}: any) {
           <Picker.Item label="HKTC" value="HKTC" />
         </Picker>
 
-        <Text>Winner BH:</Text>
-        <TextInput value={winnerBH} onChangeText={setWinnerBH} style={styles.input} />
+        <View style={styles.row}>
+          <View style={styles.column}> 
+            <Text>Winner BH:</Text>
+            <TextInput value={winnerBH} onChangeText={setWinnerBH} style={styles.input} />
+          
+            <Text>Winner FH:</Text>
+            <TextInput value={winnerFH} onChangeText={setWinnerFH} style={styles.input} />
+          </View>
+
+          <View style={styles.column}> 
+              <Text>Win Score:</Text>
+              <TextInput value={winScore} onChangeText={setWinScore} style={styles.input} keyboardType="numeric" />
         
-        <Text>Winner FH:</Text>
-        <TextInput value={winnerFH} onChangeText={setWinnerFH} style={styles.input} />
-        
-        <Text>Win Score:</Text>
-        <TextInput value={winScore} onChangeText={setWinScore} style={styles.input} keyboardType="numeric" />
-        
-        <Text>Losing Score:</Text>
-        <TextInput value={loseScore} onChangeText={setLoseScore} style={styles.input} keyboardType="numeric" />
-        
-        <Text>Loser BH:</Text>
-        <TextInput value={loserBH} onChangeText={setLoserBH} style={styles.input} />
-        
-        <Text>Loser FH:</Text>
-        <TextInput value={loserFH} onChangeText={setLoserFH} style={styles.input} />
+              <Text>Losing Score:</Text>
+              <TextInput value={loseScore} onChangeText={setLoseScore} style={styles.input} keyboardType="numeric" />
+          </View>
+
+          <View style={styles.column}> 
+            <Text>Loser BH:</Text>
+            <TextInput value={loserBH} onChangeText={setLoserBH} style={styles.input} />
+
+            <Text>Loser FH:</Text>
+            <TextInput value={loserFH} onChangeText={setLoserFH} style={styles.input} />
+          </View>
+
+        </View>
         
         <View style={styles.button}> 
           <Button title="Submit" onPress={handleSubmit} />
           {/* <Button title="Close" onPress={onClose}/> */}
         </View>
       </View>
-    // </Modal>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 50,
+  },
+  row: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: 'space-between'
+  },
+  column: {
+    flexDirection: "column",
+    margin: 15
   },
   title: {
     flex:1,
@@ -145,7 +165,7 @@ const styles = StyleSheet.create({
   button: { 
     paddingTop: 20,
     justifyContent: 'space-between',
-    minHeight: 110,
+    minHeight: 50,
   },
   picker: {
     justifyContent: 'center',
