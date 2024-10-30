@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "my-nav-app",
-    "slug": "my-nav-app",
+    "name": "PussyLeague",
+    "slug": "PussyLeague",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.luluyip.mynavapp"
+      "package": "com.luluyip.pussyleague"
     },
     "web": {
       "bundler": "metro",
