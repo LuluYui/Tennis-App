@@ -11,5 +11,8 @@ export default ({ config }: ConfigContext): ExpoConfig=> ({
       },
       package: "com.luluyip.mynavapp",
       googleServicesFile: process.env.GOOGLE_SERVICES_JSON
+  },
+  ios: {
+    bundleIdentifier: "com.luluyip.mynavapp"
   }
 });

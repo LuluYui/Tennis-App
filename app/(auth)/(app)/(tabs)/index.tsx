@@ -3,8 +3,6 @@ import { Button, StyleSheet } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import Agenda from '@/components/Calendar/test/_agenda';
 import { appColors } from '@/constants/Colors';
-// import callfunctions from '@/components/Authentication/callfunctions';
-// import {callfunction} from '@/components/callfunction';
 
 export default function TabOneScreen() {
 
@@ -24,5 +22,6 @@ const styles = StyleSheet.create({
   separator: {
     flex:1,
     width: '100%',
+    height: '100%'
   },
 });
