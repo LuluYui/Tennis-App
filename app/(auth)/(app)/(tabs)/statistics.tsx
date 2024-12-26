@@ -1,7 +1,5 @@
-import { Button, StyleSheet } from 'react-native';
-import { Text, View } from '@/components/Themed';
-import { useState } from 'react';
-import  ScoreChart from '@/components/Chart/ScoreChart';
+import { StyleSheet } from 'react-native';
+import { View } from '@/components/Themed';
 import TestChart from '@/components/Chart/TestChart';
 
 export default function TabTwoScreen() {

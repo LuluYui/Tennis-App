@@ -49,3 +49,15 @@ package-lock.json
 # google.service.json
 test-f3464-firebase-*.json
 google-services.json
+
+# vscode
+.vscode*
+
+# yarn
+yarn.lock
+
+# tmp code 
+app/modal_(ori).tsx
+components/Calendar/test/_agenda_action/edit_gameScore_modal.tsx
+components/Chart/PerfectChart.tsx
+components/Chart/StatisticsTable.tsx
