@@ -1,0 +1,63 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+
+# Native
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+# expo
+expo-env.d.ts
+
+# vscode
+.my-nav-app.code-workspace
+
+# firebase log
+*.log
+
+# lock file
+package-lock.json
+
+# google.service.json
+test-f3464-firebase-*.json
+google-services.json
+
+# vscode
+.vscode*
+
+# yarn
+yarn.lock
+
+# tmp code 
+app/modal_(ori).tsx
+components/Calendar/test/_agenda_action/edit_gameScore_modal.tsx
+components/Chart/PerfectChart.tsx
+components/Chart/StatisticsTable.tsx
