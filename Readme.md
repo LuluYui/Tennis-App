@@ -1,6 +1,6 @@
 ### Download the Test build 
 
-[Link Text](https://expo.dev/accounts/luluyip/projects/my-nav-app/builds/90eccb76-dbb6-418b-8622-4760b77f3adf)
+[Android Expo Demo Download Link](https://expo.dev/accounts/luluyip/projects/my-nav-app/builds/90eccb76-dbb6-418b-8622-4760b77f3adf)
 
 Android Test Build :  
 [![Tennis App Demo](assets/demo/demo_pic.png)](https://youtube.com/shorts/ezfoxV__NAw?feature=share)
