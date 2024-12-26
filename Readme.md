@@ -1,3 +1,10 @@
+### Download the Test build 
+
+[Link Text](https://expo.dev/accounts/luluyip/projects/my-nav-app/builds/90eccb76-dbb6-418b-8622-4760b77f3adf)
+
+Android Test Build :  
+[![Tennis App Demo](assets/demo/demo_pic.png)](https://youtube.com/shorts/ezfoxV__NAw?feature=share)
+
 # Packages
 firebase 10.6.0
 react-native 0.71.7 -> XCode requires 14.3 further (not available from current machine)
@@ -35,9 +42,3 @@ Run `yarn start`
 
 - Before your start the project, you need a google-services.json to allow the notification function to work. 
 Create your own firebase services. 
-
-
-### Download the Test build 
-
-Android Test Build :  
-[![Tennis App Demo](assets/demo/demo_pic.png)](https://youtube.com/shorts/ezfoxV__NAw?feature=share)
