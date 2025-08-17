@@ -29,9 +29,28 @@ A Tennis app to allow users to record their game scores and analyze player perfo
 
 ## Backend
 
-This project uses Firebase services. To run locally, you can set up the Firebase Emulator Suite.
+This project uses Firebase services (Auth, Firestore, Functions). To run the backend locally for development, you need to set up the Firebase Emulator Suite.
 
-*(You can add instructions for setting up the Firebase emulator here)*
+1.  **Install Firebase CLI:** If you don't have it, install it globally.
+    ```bash
+    npm install -g firebase-tools
+    ```
+
+2.  **Login to Firebase:**
+    ```bash
+    firebase login
+    ```
+
+3.  **Initialize Firebase in your project:** If you haven't already, run this command from your project root and select Firestore, Functions, and Emulators when prompted. This will create a `firebase.json` file.
+    ```bash
+    firebase init
+    ```
+
+4.  **Start the emulators:** This will download the emulator binaries the first time you run it.
+    ```bash
+    firebase setup:emulators:firestore # if firebase cannot connect to .jar file with cloud
+    firebase emulators:start
+    ```
 
 # Packages
 
