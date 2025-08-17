@@ -1,8 +1,8 @@
 ![App Demo GIF](./assets/demo/Tennis_App_Demo.gif)
 ![App Demo 2 GIF](./assets/demo/Tennis_App_Smooth_demo.gif)
 
-<img src="./assets/demo/Tennis_App_Demo.gif" width="300px"/>
-<img src="./assets/demo/Tennis_App_Smooth_demo.gif" width="300px"/>
+<img src="./assets/demo/Tennis_App_Demo.gif" width="300"/>
+<img src="./assets/demo/Tennis_App_Smooth_demo.gif" width="300"/>
 
 # Summary 
 
