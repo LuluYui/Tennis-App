@@ -1,0 +1,16 @@
+{
+  "name": "firebase-cloudfun-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "firebase emulators:start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bad-words": "^3.0.4",
+    "capitalize-sentence": "^0.1.5"
+  }
+}
