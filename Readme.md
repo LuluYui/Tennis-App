@@ -6,6 +6,7 @@ https://github.com/user-attachments/assets/98624602-a962-4d06-997b-2828067f3ab8
 # Summary 
 
 A Tennis app to allow users to record their game scores and analyze player performance.
+This is a project dedicated to Chi and Wilson for helping out with their tennis team score records, better UX than excel spreadsheet and authentication system. 
 
 # Architecture 
 - Front-End: React-Native with Expo template
